@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Text.RegularExpressions;
-using System.Net.Sockets;
 using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Net.Security;
+using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using System.Text.RegularExpressions;
 using TeamControlium.Utilities;
 
 namespace TeamControlium.HTTPNonUI
@@ -114,7 +114,6 @@ namespace TeamControlium.HTTPNonUI
     /// </example>
     public class HTTPNonUI
     {
-
         /// <summary>
         /// Instantiates an instance of the HTTPNonUI class, used for testing an HTTP interface when used for Non-UI interaction (IE. WebServices, Json etc...)
         /// </summary>
@@ -139,7 +138,6 @@ namespace TeamControlium.HTTPNonUI
         /// <param name="sslPolicyErrors"></param>
         /// <returns></returns>
         public delegate bool ValidateServerCertCallBack(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors);
-
 
         /// <summary>
         /// Posible HTTP Methods used for interaction with the HTTP portal being used.  Overridden if RequestType is set to InvalidHTTPMethod.
@@ -212,21 +210,14 @@ namespace TeamControlium.HTTPNonUI
         public SslProtocols SSLProtocol { get; private set; }
 
         private SslProtocols sslProtocol;
+
         private TimeSpan? sendTimeout;
+
         private TimeSpan? receiveTimeout;
+
         private bool useSSL;
+
         private RemoteCertificateValidationCallback certificateValidationCallback;
-
-
-        /// <summary>
-        /// Encodes a plain text string into Base64.
-        /// </summary>
-        /// <param name="plainText">Text to be converted</param>
-        /// <returns>Equivalent string Base64 encoded</returns>
-        public static string Base64Encode(string plainText)
-        {
-            return System.Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(plainText));
-        }
 
         /// <summary>
         /// Request Type used in the HTTP Request.  Default is RequestTypes.Normal indicating a normal HTTP request.
@@ -248,6 +239,15 @@ namespace TeamControlium.HTTPNonUI
         /// </summary>
         public string ResponseRaw { get; private set; }
 
+        /// <summary>
+        /// Encodes a plain text string into Base64.
+        /// </summary>
+        /// <param name="plainText">Text to be converted</param>
+        /// <returns>Equivalent string Base64 encoded</returns>
+        public static string Base64Encode(string plainText)
+        {
+            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(plainText));
+        }
 
         /// <summary>
         /// Builds and returns an HTTP Request header.  Header is well-formed unless  RequestType is set to RequestTypes.InvalidHTTPMethod, RequestTypes.BadProtocol, RequestTypes.InvalidHTTPVersion or RequestTypes.BadlyFormedHeaderLine.
@@ -272,18 +272,21 @@ namespace TeamControlium.HTTPNonUI
             // HTTP Method
             string TopLine = null;
             if (RequestType == RequestTypes.InvalidHTTPMethod)
+            {
                 TopLine = "INVALID ";
+            }
             else
+            {
                 switch (HTTPMethod)
                 {
                     case HTTPMethods.Post: TopLine = "POST "; break;
                     case HTTPMethods.Get: TopLine = "GET "; break;
                     default: throw new ArgumentException("Must be POST or GET", "HTTPMethod");
                 }
+            }
 
             // ResourcePath - Is the path that defines the resource being accessed
             TopLine += ResourcePath;
-
 
             // If Parameters have been passed in use them (Irrelevant of Method - test may be doing this deliberately...)
             if (Parameters.Count > 0)
@@ -300,13 +303,12 @@ namespace TeamControlium.HTTPNonUI
             // HTTP Version - This is always HTTP/1.1.  However, test may want to use bad protocol and/or version
             TopLine += (RequestType == RequestTypes.BadProtocol) ? "PHHT/" : "HTTP/";
             TopLine += (RequestType == RequestTypes.InvalidHTTPVersion) ? "0.0" : "1.1";
+
             // Add top line to list of header lines
             returnHeader.Add(TopLine);
 
-            //
             // And the rest of the header lines.  These are in the format of:-
             // Key:Value although the test may want badly formed lines so we use ; instead of :
-            //
             if ((RequestHeaders != null) && RequestHeaders.Count > 0)
             {
                 string Joiner = (RequestType == RequestTypes.BadlyFormedHeaderLine) ? "; " : ": ";
@@ -316,10 +318,8 @@ namespace TeamControlium.HTTPNonUI
                 }
             }
 
-            //
             // Finally, build the actual Header as a single string delimted with CR-LFs...  Test may want to use
             // different line endings, so allow for that....
-            //
             string HeaderLinesSeperator = "\r\n";
             switch (RequestType)
             {
@@ -327,7 +327,9 @@ namespace TeamControlium.HTTPNonUI
                 case RequestTypes.HeaderLinesLFOnly: HeaderLinesSeperator = "\n"; break;
                 case RequestTypes.HeaderLinesLFBeforeCR: HeaderLinesSeperator = "\n\r"; break;
             }
-            foreach (string currentLine in returnHeader) returnString += currentLine + HeaderLinesSeperator;
+
+            foreach (string currentLine in returnHeader)
+                returnString += currentLine + HeaderLinesSeperator;
 
             this.RequestHeader = returnString;
 
@@ -743,9 +745,7 @@ namespace TeamControlium.HTTPNonUI
             // not be able to guarantee the port being closed.
             using (TcpClient tcpClient = new TcpClient())
             {
-                //
                 // If we are logging information to a file, do it....  And add a line to the log so we can see the filename
-                //
                 if (General.IsValueTrue(TestData.Repository["HTTPNonUI", "LogTransactions"]))
                 {
                     string LogFileName = Path.Combine(Environment.CurrentDirectory, Path.GetFileName("request_" + ConvertURLToValidFilename(URL) + "_" + DateTime.Now.ToString("yy-MM-dd_HH-mm-ss-ff") + ".txt"));
@@ -753,38 +753,31 @@ namespace TeamControlium.HTTPNonUI
                     Logger.WriteLine(Logger.LogLevels.TestInformation, string.Format("Send to [{0}] logged in [{1}]", URL, LogFileName));
                 }
 
-                //
                 // Connect to the TCP listener (We could get a TCP related exception thrown but we hope the caller will deal with it....) and
                 // set the timeouts.
-                //
                 tcpClient.Connect(URL, Port);
+
                 if (sendTimeout.HasValue) tcpClient.SendTimeout = Convert.ToInt32(sendTimeout.Value.TotalMilliseconds);
+
                 if (receiveTimeout.HasValue) tcpClient.ReceiveTimeout = Convert.ToInt32(receiveTimeout.Value.TotalMilliseconds);
 
-                //
                 // Setup the Server certification callback incase this is an SSL call.  If caller has not setup its own callback handler (certificateValidationCallback is null)
                 // we will deal with the callback using the ValidateServerCert delegate.
-                //
                 RemoteCertificateValidationCallback validationCallback = certificateValidationCallback ?? new RemoteCertificateValidationCallback(ValidateServerCert);
 
-                //
                 // We could be doing SSL OR HTTP.  We create an SSL stream or standard Network stream depending whether we are using ssl or not.
-                //
                 dynamic stream;
                 if (useSSL)
                     stream = (SslStream)new SslStream(tcpClient.GetStream(), false, validationCallback, null);
                 else
                     stream = (NetworkStream)tcpClient.GetStream();
 
-
-                //
                 // We wrap use of the stream in a using to be sure the stream is properly flushed when finished with.
-                //
                 using (var IOStream = stream)
+                using (var sw = new StreamWriter(IOStream))
+                using (var sr = new StreamReader(IOStream))
                 {
-                    //
                     // If using SSL we need to do the authentication
-                    //
                     if (useSSL)
                     {
                         X509Certificate2Collection xc = new X509Certificate2Collection();
@@ -792,24 +785,20 @@ namespace TeamControlium.HTTPNonUI
                         IOStream.AuthenticateAsClient(URL, xc, sslProtocol, false);
                         SSLProtocol = IOStream.SslProtocol;
                     }
-                    using (System.IO.StreamWriter sw = new System.IO.StreamWriter(IOStream))
+
+                    sw.Write(request);
+                    sw.Flush();
+
+                    string response = sr.ReadToEnd();
+                    if (General.IsValueTrue(TestData.Repository["HTTPNonUI", "LogTransactions"]))
                     {
-                        using (System.IO.StreamReader sr = new System.IO.StreamReader(IOStream))
-                        {
-                            sw.Write(request);
-                            sw.Flush();
+                        string LogFileName = Path.Combine(Environment.CurrentDirectory, Path.GetFileName("response_" + ConvertURLToValidFilename(URL) + "_" + DateTime.Now.ToString("yy-MM-dd_HH-mm-ss-ff") + ".txt"));
 
-                            string response = sr.ReadToEnd();
-                            if (General.IsValueTrue(TestData.Repository["HTTPNonUI", "LogTransactions"]))
-                            {
-                                string LogFileName = Path.Combine(Environment.CurrentDirectory, Path.GetFileName("response_" + ConvertURLToValidFilename(URL) + "_" + DateTime.Now.ToString("yy-MM-dd_HH-mm-ss-ff") + ".txt"));
-
-                                Logger.WriteTextToFile(LogFileName, true, response);
-                                Logger.WriteLine(Logger.LogLevels.TestInformation, string.Format("Reply from [{0}] logged in [{1}]", URL, LogFileName));
-                            }
-                            return response;
-                        }
+                        Logger.WriteTextToFile(LogFileName, true, response);
+                        Logger.WriteLine(Logger.LogLevels.TestInformation, string.Format("Reply from [{0}] logged in [{1}]", URL, LogFileName));
                     }
+
+                    return response;
                 }
             }
         }
@@ -835,8 +824,8 @@ namespace TeamControlium.HTTPNonUI
         {
             this.useSSL = false;
             return DoTCPRequest(URL, Port, request);
-
         }
+
         private string SendTCPRequest(SslProtocols SSLProtocol, string CertificateFile, string CertificatePassword, string URL, int Port, string request)
         {
             useSSL = true;
@@ -844,6 +833,7 @@ namespace TeamControlium.HTTPNonUI
             ClientCertificate = new X509Certificate2(CertificateFile, CertificatePassword);
             return DoTCPRequest(URL, Port, request);
         }
+
         private string SendTCPRequest(SslProtocols SSLProtocol, X509Certificate2 ClientCertificate, string URL, int Port, string request)
         {
             useSSL = true;
@@ -851,6 +841,7 @@ namespace TeamControlium.HTTPNonUI
             this.ClientCertificate = ClientCertificate;
             return DoTCPRequest(URL, Port, request);
         }
+
         private string SendTCPRequest(SslProtocols SSLProtocol, string URL, int Port, string request)
         {
             useSSL = true;
@@ -858,12 +849,14 @@ namespace TeamControlium.HTTPNonUI
             this.ClientCertificate = null;
             return DoTCPRequest(URL, Port, request);
         }
+
         private string SendTCPRequest(string URL, int Port, string request, TimeSpan ReceiveTimeout)
         {
             this.useSSL = false;
             receiveTimeout = ReceiveTimeout;
             return DoTCPRequest(URL, Port, request);
         }
+
         private string SendTCPRequest(SslProtocols SSLProtocol, string CertificateFile, string CertificatePassword, string URL, int Port, string request, TimeSpan ReceiveTimeout)
         {
             useSSL = true;
@@ -872,6 +865,7 @@ namespace TeamControlium.HTTPNonUI
             receiveTimeout = ReceiveTimeout;
             return DoTCPRequest(URL, Port, request);
         }
+
         private string SendTCPRequest(SslProtocols SSLProtocol, X509Certificate2 ClientCertificate, string URL, int Port, string request, TimeSpan ReceiveTimeout)
         {
             useSSL = true;
@@ -880,6 +874,7 @@ namespace TeamControlium.HTTPNonUI
             receiveTimeout = ReceiveTimeout;
             return DoTCPRequest(URL, Port, request);
         }
+
         private string SendTCPRequest(string URL, int Port, string request, TimeSpan SendTimeout, TimeSpan ReceiveTimeout)
         {
             useSSL = false;
@@ -887,6 +882,7 @@ namespace TeamControlium.HTTPNonUI
             receiveTimeout = ReceiveTimeout;
             return DoTCPRequest(URL, Port, request);
         }
+
         private string SendTCPRequest(SslProtocols SSLProtocol, string CertificateFile, string CertificatePassword, string URL, int Port, string request, TimeSpan SendTimeout, TimeSpan ReceiveTimeout)
         {
             useSSL = true;
@@ -896,6 +892,7 @@ namespace TeamControlium.HTTPNonUI
             receiveTimeout = ReceiveTimeout;
             return DoTCPRequest(URL, Port, request);
         }
+
         private string SendTCPRequest(SslProtocols SSLProtocol, X509Certificate2 ClientCertificate, string URL, int Port, string request, TimeSpan SendTimeout, TimeSpan ReceiveTimeout)
         {
             useSSL = true;
@@ -905,18 +902,19 @@ namespace TeamControlium.HTTPNonUI
             receiveTimeout = ReceiveTimeout;
             return DoTCPRequest(URL, Port, request);
         }
+
         private string BuildRequest(string RequestHeader, string RequestBody)
         {
-            //
             // Stitch the HTTP Request Body to the HTTP Request Header.  HTTP requires a double CRLF between the header and the body
-            //
-            //
             // If the Header we have been passed is empty, use the class RequestHeader property (which itself may be empty...)  This way, a user may build the HTTP Header
             // themselves...
             string request = string.IsNullOrEmpty(RequestHeader) ? this.RequestHeader : RequestHeader;
+
             if (string.IsNullOrEmpty(request))
+            {
                 // If the request has no header, we can just use the passed Request Body.
                 request = (string.IsNullOrEmpty(RequestBody) ? "" : RequestBody);
+            }
             else
             {
                 // If we do have an HTTP header, ensure there is a double CRLF before the Body (if any...)
@@ -926,15 +924,14 @@ namespace TeamControlium.HTTPNonUI
 
             return request;
         }
+
         private Dictionary<string, string> DecodeResponse(string rawData)
         {
-            Dictionary<string, string> returnData = new Dictionary<string, string>();
+            var returnData = new Dictionary<string, string>();
 
             try
             {
-                //
                 // Do First line (IE. HTTP/1.1 200 OK)
-                //
                 if (string.IsNullOrEmpty(rawData) || string.IsNullOrWhiteSpace(rawData))
                 {
                     returnData.Add("HTTPVersion", "Unknown - Empty Response");
@@ -954,9 +951,9 @@ namespace TeamControlium.HTTPNonUI
 
                 // Get the header out first....
                 string HeaderArea = rawData.Substring(0, rawData.IndexOf("\r\n\r\n"));
+
                 // And the HTML body
                 string BodyArea = rawData.Substring(rawData.IndexOf("\r\n\r\n") + 4, rawData.Length - rawData.IndexOf("\r\n\r\n") - 4);
-
 
                 // Split & check first line
                 string[] FirstLineSplit = HeaderArea.Split('\r')[0].Split(' ');
@@ -968,7 +965,6 @@ namespace TeamControlium.HTTPNonUI
                     returnData.Add("StatusCode", "Unknown - Response not formatted correctly");
                     return returnData;
                 }
-
 
                 // Finally, we can process the first line....
                 returnData.Add("HTTPVersion", FirstLineSplit[0].Split('/')[1]);
@@ -988,20 +984,11 @@ namespace TeamControlium.HTTPNonUI
                         returnData.Add(HeaderSplit[index].Split(':')[0].Trim(), HeaderSplit[index].Split(':')[1].Trim());
                 }
 
-
-
-
                 // And finally the body...
-                //
                 // First, we need to know if the body is chunked. It if is we need to de-chunk it....
-                //
-                //
-                //
                 if (returnData.ContainsKey("Transfer-Encoding") && returnData["Transfer-Encoding"] == "chunked")
                 {
-                    //
                     // So, we need to dechunk the data.....
-                    //
                     // Data is chunked as follows
                     // <Number of characters in hexaecimal>\r\n
                     // <Characters in chunk>\r\n
@@ -1015,19 +1002,20 @@ namespace TeamControlium.HTTPNonUI
                     while (!bDechunkingFinished)
                     {
                         // Itterates through the chunked body area
-
                         // Get the Chunk HEX
                         chunkHex = BodyArea.Substring(0, BodyArea.IndexOf("\r\n"));
                         BodyArea = BodyArea.Substring(chunkHex.Length + 2, BodyArea.Length - (chunkHex.Length + 2));
 
-                        //
                         if (!int.TryParse(chunkHex, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out iChunkLength))
                         {
                             throw new InvalidHTTPResponse("[HTTP]DecodeResponse: Fatal error decoding chunked html body. Parsing Hex [{0}] failed)", chunkHex);
                         }
+
                         if (iChunkLength == 0) break;
+
                         workingBody += BodyArea.Substring(0, iChunkLength);
                         BodyArea = BodyArea.Substring(iChunkLength, BodyArea.Length - iChunkLength);
+
                         if (!BodyArea.StartsWith("\r\n"))
                         {
                             InvalidHTTPResponse ex = new InvalidHTTPResponse("[HTTP]DecodeResponse: Fatal error decoding chunked html body. End of chunk length not CRLF!)", iChunkLength);
@@ -1035,59 +1023,27 @@ namespace TeamControlium.HTTPNonUI
                             ex.Data.Add("Chunk Data", BodyArea);
                             throw ex;
                         }
+
                         BodyArea = BodyArea.Substring(2, BodyArea.Length - 2);
                     }
                     returnData.Add("Body", workingBody);
                 }
                 else
+                {
                     // No chunked so just grab the body
                     returnData.Add("Body", BodyArea);
-
-                return returnData;
+                }                
             }
             catch (Exception ex)
             {
                 throw new InvalidHTTPResponse("[HTTP]DecodeResponse: Fatal error decoding raw response string header)", ex);
             }
+
+            return returnData;
         }
         private bool ValidateServerCert(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
             return (RequestType != RequestTypes.DoNotAcceptServerCertificate);
         }
-
-        /// <summary>
-        /// Encapsulates an exception in performing HTTP Non-UI transaction
-        /// </summary>
-        public class InvalidHTTPResponse : Exception
-        {
-
-            static private string FormatMessage(string Text, params object[] args)
-            {
-                string Message = string.Format("Invalid HTTP Response: " + Text, args);
-                return Message;
-            }
-
-            /// <summary>
-            /// Exception in HTTPNonUI exchange
-            /// </summary>
-            /// <param name="Text">Text of error</param>
-            /// <param name="args">Optional parameters</param>
-            public InvalidHTTPResponse(string Text, params object[] args)
-            : base(InvalidHTTPResponse.FormatMessage(Text, args))
-            {
-            }
-            /// <summary>
-            /// Exception in HTTPNonUI exchange
-            /// </summary>
-            /// <param name="Text">Text of error</param>
-            /// <param name="args">Optional parameters</param>
-            /// <param name="ex">Internal exception</param>
-            public InvalidHTTPResponse(string Text, Exception ex, params object[] args)
-            : base(InvalidHTTPResponse.FormatMessage(Text, args), ex)
-            {
-            }
-        }
-
     }
-
 }
