@@ -9,6 +9,8 @@ using System.Net.Security;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using TeamControlium.Utilities;
+using System.Net;
+using System.Reflection;
 
 namespace TeamControlium.HTTPNonUI
 {
@@ -128,7 +130,10 @@ namespace TeamControlium.HTTPNonUI
             sslProtocol = SslProtocols.None;
             useSSL = false;
             certificateValidationCallback = null;
-        }
+            string logTransactionsString;
+            if (!TestData.Repository.TryGetItem("HTTPNonUI", "LogTransactions", out logTransactionsString)) logTransactionsString = "false";
+            logTransactions = General.IsValueTrue(logTransactionsString); 
+         }
 
         /// <summary>
         /// Called when server certificate needs validation.  If not delegated certificates are automatically accepted irrelevant of correctness
@@ -216,6 +221,7 @@ namespace TeamControlium.HTTPNonUI
         private TimeSpan? receiveTimeout;
         private bool useSSL;
         private RemoteCertificateValidationCallback certificateValidationCallback;
+        private bool logTransactions;
 
 
         /// <summary>
@@ -741,12 +747,13 @@ namespace TeamControlium.HTTPNonUI
         {
             // Wrap the TCP Client in a using to ensure GC tears down the TCP port when we have finished.  Bit messy otherwise as we would
             // not be able to guarantee the port being closed.
+ //           using (TcpClient tcpClient = CreateTcpClient("http://"+URL))
             using (TcpClient tcpClient = new TcpClient())
             {
                 //
                 // If we are logging information to a file, do it....  And add a line to the log so we can see the filename
                 //
-                if (General.IsValueTrue(TestData.Repository["HTTPNonUI", "LogTransactions"]))
+                if (logTransactions)
                 {
                     string LogFileName = Path.Combine(Environment.CurrentDirectory, Path.GetFileName("request_" + ConvertURLToValidFilename(URL) + "_" + DateTime.Now.ToString("yy-MM-dd_HH-mm-ss-ff") + ".txt"));
                     Logger.WriteTextToFile(LogFileName, true, URL + ":" + Port.ToString() + "\r\n" + request);
@@ -800,7 +807,7 @@ namespace TeamControlium.HTTPNonUI
                             sw.Flush();
 
                             string response = sr.ReadToEnd();
-                            if (General.IsValueTrue(TestData.Repository["HTTPNonUI", "LogTransactions"]))
+                            if (logTransactions)
                             {
                                 string LogFileName = Path.Combine(Environment.CurrentDirectory, Path.GetFileName("response_" + ConvertURLToValidFilename(URL) + "_" + DateTime.Now.ToString("yy-MM-dd_HH-mm-ss-ff") + ".txt"));
 
@@ -929,7 +936,7 @@ namespace TeamControlium.HTTPNonUI
         private Dictionary<string, string> DecodeResponse(string rawData)
         {
             Dictionary<string, string> returnData = new Dictionary<string, string>();
-
+            ResponseRaw = rawData;
             try
             {
                 //
@@ -1042,7 +1049,6 @@ namespace TeamControlium.HTTPNonUI
                 else
                     // No chunked so just grab the body
                     returnData.Add("Body", BodyArea);
-
                 return returnData;
             }
             catch (Exception ex)
