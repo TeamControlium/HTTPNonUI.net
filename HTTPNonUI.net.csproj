@@ -80,14 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HTTPNonUI.cs" />
-    <Compile Include="HTTPNonUISteps.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="HTTPNonUI.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-    </None>
     <None Include="HTTPNonUI.net.nuspec" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
