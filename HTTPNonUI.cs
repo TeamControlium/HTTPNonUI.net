@@ -9,6 +9,8 @@ using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using TeamControlium.Utilities;
+using System.Net;
+using System.Reflection;
 
 namespace TeamControlium.HTTPNonUI
 {
@@ -127,7 +129,10 @@ namespace TeamControlium.HTTPNonUI
             sslProtocol = SslProtocols.None;
             useSSL = false;
             certificateValidationCallback = null;
-        }
+            string logTransactionsString;
+            if (!TestData.Repository.TryGetItem("HTTPNonUI", "LogTransactions", out logTransactionsString)) logTransactionsString = "false";
+            logTransactions = General.IsValueTrue(logTransactionsString); 
+         }
 
         /// <summary>
         /// Called when server certificate needs validation.  If not delegated certificates are automatically accepted irrelevant of correctness
@@ -214,6 +219,10 @@ namespace TeamControlium.HTTPNonUI
         private TimeSpan? sendTimeout;
 
         private TimeSpan? receiveTimeout;
+
+        private bool useSSL;
+        private RemoteCertificateValidationCallback certificateValidationCallback;
+        private bool logTransactions;
 
         private bool useSSL;
 
@@ -743,10 +752,12 @@ namespace TeamControlium.HTTPNonUI
         {
             // Wrap the TCP Client in a using to ensure GC tears down the TCP port when we have finished.  Bit messy otherwise as we would
             // not be able to guarantee the port being closed.
+ //           using (TcpClient tcpClient = CreateTcpClient("http://"+URL))
             using (TcpClient tcpClient = new TcpClient())
             {
                 // If we are logging information to a file, do it....  And add a line to the log so we can see the filename
-                if (General.IsValueTrue(TestData.Repository["HTTPNonUI", "LogTransactions"]))
+                //
+                if (logTransactions)
                 {
                     string LogFileName = Path.Combine(Environment.CurrentDirectory, Path.GetFileName("request_" + ConvertURLToValidFilename(URL) + "_" + DateTime.Now.ToString("yy-MM-dd_HH-mm-ss-ff") + ".txt"));
                     Logger.WriteTextToFile(LogFileName, true, URL + ":" + Port.ToString() + "\r\n" + request);
@@ -792,10 +803,21 @@ namespace TeamControlium.HTTPNonUI
                     string response = sr.ReadToEnd();
                     if (General.IsValueTrue(TestData.Repository["HTTPNonUI", "LogTransactions"]))
                     {
-                        string LogFileName = Path.Combine(Environment.CurrentDirectory, Path.GetFileName("response_" + ConvertURLToValidFilename(URL) + "_" + DateTime.Now.ToString("yy-MM-dd_HH-mm-ss-ff") + ".txt"));
+                        using (System.IO.StreamReader sr = new System.IO.StreamReader(IOStream))
+                        {
+                            sw.Write(request);
+                            sw.Flush();
 
-                        Logger.WriteTextToFile(LogFileName, true, response);
-                        Logger.WriteLine(Logger.LogLevels.TestInformation, string.Format("Reply from [{0}] logged in [{1}]", URL, LogFileName));
+                            string response = sr.ReadToEnd();
+                            if (logTransactions)
+                            {
+                                string LogFileName = Path.Combine(Environment.CurrentDirectory, Path.GetFileName("response_" + ConvertURLToValidFilename(URL) + "_" + DateTime.Now.ToString("yy-MM-dd_HH-mm-ss-ff") + ".txt"));
+
+                                Logger.WriteTextToFile(LogFileName, true, response);
+                                Logger.WriteLine(Logger.LogLevels.TestInformation, string.Format("Reply from [{0}] logged in [{1}]", URL, LogFileName));
+                            }
+                            return response;
+                        }
                     }
 
                     return response;
@@ -927,7 +949,8 @@ namespace TeamControlium.HTTPNonUI
 
         private Dictionary<string, string> DecodeResponse(string rawData)
         {
-            var returnData = new Dictionary<string, string>();
+            Dictionary<string, string> returnData = new Dictionary<string, string>();
+            ResponseRaw = rawData;
 
             try
             {
@@ -1032,7 +1055,7 @@ namespace TeamControlium.HTTPNonUI
                 {
                     // No chunked so just grab the body
                     returnData.Add("Body", BodyArea);
-                }                
+                return returnData;
             }
             catch (Exception ex)
             {
