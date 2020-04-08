@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>TeamControlium.NonGUI</RootNamespace>
+    <AssemblyName>TeamControlium.NonGUI</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>.\bin\Debug\TeamControlium.NonGUI.xml</DocumentationFile>
+    <OutputPath>.\bin\Debug</OutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>.\bin\Release\TeamControlium.NonGUI.xml</DocumentationFile>
+    <OutputPath>.\bin\Release</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="TeamControlium.Utilities" Version="2.0.2" />
+  </ItemGroup>
+
+</Project>

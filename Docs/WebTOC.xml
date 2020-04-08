@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<HelpTOC>
+
+  <HelpTOCNode Id="7b655b88-71ae-4de5-99d0-972f4d1cd11b" Title="TeamControlium" Url="html/b39c324c-c037-2c99-0609-ba08961e7d87.htm">
+    <HelpTOCNode Id="3ac86885-1cc1-450b-a725-70496fe74fc4" Title="InvalidHTTPResponse Class" Url="html/f1912526-3817-42bc-3968-5029637ee35c.htm">
+      <HelpTOCNode Id="baaeeaef-c0ef-4e32-a347-5d6dba5e74a9" Title="InvalidHTTPResponse Constructor " Url="html/25eb63ad-5c72-7871-7b38-e018267904c3.htm">
+        <HelpTOCNode Title="InvalidHTTPResponse Constructor (String, Object[])" Url="html/de12b7df-120c-d191-16bb-1b2f6e46b0f5.htm" />
+        <HelpTOCNode Title="InvalidHTTPResponse Constructor (String, Exception, Object[])" Url="html/042adacf-faef-26e7-11a7-a4b5aa01bd0e.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Title="InvalidHTTPResponse Properties" Url="html/f501b1d6-c7db-dcd1-c9b0-0ed29051a8e3.htm" />
+      <HelpTOCNode Title="InvalidHTTPResponse Methods" Url="html/d1dd7031-0ef0-3285-365a-ad35ea35adc3.htm" />
+    </HelpTOCNode>
+  </HelpTOCNode>
+  <HelpTOCNode Id="a471530d-727d-4681-84a0-3593b26eca4f" Title="TeamControlium.NonGUI" Url="html/7c8197c9-2a4b-3073-068f-4bdf12fc0e2c.htm">
+    <HelpTOCNode Id="89c11d0a-8ee4-4546-b12f-45234716397b" Title="HTTPBased Class" Url="html/72120597-6fa2-1437-26de-f3477e705880.htm">
+      <HelpTOCNode Title="HTTPBased Constructor " Url="html/d3f0c93b-43af-0dda-80c4-187ce37ce149.htm" />
+      <HelpTOCNode Id="c757b3d3-4235-47ca-8c8a-f1d1eb2d0d25" Title="HTTPBased Properties" Url="html/fdcb1f72-8d09-33b5-8fd4-6482e137630c.htm">
+        <HelpTOCNode Title="CertificateValidationCallback Property " Url="html/ac3d03ec-d19e-ae0b-aa11-cdc050cf862e.htm" />
+        <HelpTOCNode Title="ClientCertificate Property " Url="html/6aa7754d-529a-95d4-fff7-c216bbab2fba.htm" />
+        <HelpTOCNode Title="ResponseRaw Property " Url="html/e621def1-0ad6-aff1-eb25-919c199a8510.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="45b570bb-2ad1-49f8-b205-1c15e57b4839" Title="HTTPBased Methods" Url="html/c033031f-2277-0002-3904-8f274577b9f7.htm">
+        <HelpTOCNode Title="HttpPOST Method " Url="html/08c2ebe4-9a5d-47db-0561-6b76d4ff60f7.htm" />
+      </HelpTOCNode>
+    </HelpTOCNode>
+    <HelpTOCNode Id="0609f847-3e2b-4402-af32-df91f3c714c8" Title="TCPBased Class" Url="html/fb857cb7-bc1f-e2c6-920f-35db79b9646f.htm">
+      <HelpTOCNode Title="TCPBased Constructor " Url="html/bd2422d3-8fc6-5a49-8139-f2eebc6e94e9.htm" />
+      <HelpTOCNode Id="08f83c08-8b29-4d5b-a033-aaec32467953" Title="TCPBased Properties" Url="html/2b1df6c5-b7b5-ff22-22f2-a17497b3d972.htm">
+        <HelpTOCNode Title="CertificateValidationCallback Property " Url="html/a74fd353-681c-ad03-7120-487d2d5a423d.htm" />
+        <HelpTOCNode Title="ClientCertificate Property " Url="html/02266209-1383-1066-c210-72b6c1ebaa3e.htm" />
+      </HelpTOCNode>
+      <HelpTOCNode Id="ca2ba2fb-94a8-49ae-938f-ee246df1689a" Title="TCPBased Methods" Url="html/18c04b2e-0eae-54d6-cc59-a7847294ef1d.htm">
+        <HelpTOCNode Id="42a543d1-ecc0-4583-914a-46a900bb43d2" Title="DoTCPRequest Method " Url="html/82d775c2-0c8e-ee8f-5dba-1d8b71da8246.htm">
+          <HelpTOCNode Title="DoTCPRequest Method (Nullable(SslProtocols), X509Certificate2, String, Int32, String)" Url="html/03059a94-49f9-5a2a-06d2-c71f54297a94.htm" />
+          <HelpTOCNode Title="DoTCPRequest Method (Nullable(SslProtocols), String, String, String, Int32, String)" Url="html/0a472b5e-dd92-66a7-cd5c-60d9e1344fab.htm" />
+        </HelpTOCNode>
+      </HelpTOCNode>
+    </HelpTOCNode>
+  </HelpTOCNode>
+</HelpTOC>

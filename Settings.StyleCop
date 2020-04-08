@@ -1,0 +1,28 @@
+<StyleCopSettings Version="105">
+  <GlobalSettings>
+    <CollectionProperty Name="RecognizedWords">
+      <Value>Specflow</Value>
+      <Value>stdout</Value>
+      <Value>LogToConsole</Value>
+      <Value>Detokeniser</Value>
+      <Value>Controlium</Value>
+      <Value>cloneable</Value>
+      <Value>alphanumerics</Value>
+      <Value>param</Value>
+    </CollectionProperty>
+    <StringProperty Name="MergeSettingsFiles">NoMerge</StringProperty>
+    <StringProperty Name="Culture">en-GB</StringProperty>
+  </GlobalSettings>
+  <Analyzers>
+    <Analyzer AnalyzerId="StyleCop.CSharp.NamingRules">
+      <AnalyzerSettings>
+        <CollectionProperty Name="Hungarian">
+          <Value>is</Value>
+          <Value>from</Value>
+          <Value>to</Value>
+          <Value>io</Value>
+        </CollectionProperty>
+      </AnalyzerSettings>
+    </Analyzer>
+  </Analyzers>
+</StyleCopSettings>

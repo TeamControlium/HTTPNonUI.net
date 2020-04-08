@@ -1,0 +1,11 @@
+##
+## We only want the .shfbproj file, .png and .aml files
+##
+##
+
+# Ignore everything
+
+# But not these...
+!*.shfbproj
+!*.png
+!*.aml
