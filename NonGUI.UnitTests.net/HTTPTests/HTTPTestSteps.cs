@@ -5,6 +5,8 @@ namespace TeamControlium.NonGUI.UnitTests
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Text.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TeamControlium.NonGUI;
     using TechTalk.SpecFlow;
@@ -31,13 +33,38 @@ namespace TeamControlium.NonGUI.UnitTests
         }
 
         /// <summary>
-        /// Ensures Specflow context has a valid domain in the Domain parameter
+        /// Set domain, resource and query that will be used in HTTP Call
         /// </summary>
-        [Given(@"I have a valid domain")]
-        public void GivenIHaveAValidDomain()
+        /// <param name="domainResource">Domain and resource text to be used</param>
+        [Given(@"I will browse to \(domain/resourcepath\) ""(.*)""")]
+        public void GivenIWillBrowseToDomainResource(string domainResource)
         {
-            this.context["Domain"] = "www.dataaccess.com";
+            if (string.IsNullOrEmpty(domainResource))
+            {
+                this.context["Domain"] = "";
+                this.context["ResourcePath"] = "";
+                this.context["Query"] = "";
+            }
+            else
+            {
+                string[] splitDomainAndResource = domainResource.Split('/', 2);
+                string[] splitDomainResourceAndQuery = domainResource.Split('?', 2);
+                this.context["Domain"] = splitDomainAndResource[0];
+                this.context["ResourcePath"] = splitDomainAndResource.Length == 1 ? "/" : "/" + splitDomainAndResource[1].Split("?")[0];
+                this.context["Query"] = splitDomainResourceAndQuery.Length == 1 ? string.Empty : splitDomainResourceAndQuery[1];
+            }
         }
+
+
+        /// <summary>
+        /// Ensures Specflow context has an invalid domain in the Domain parameter
+        /// </summary>
+        [Given(@"I have an invalid domain")]
+        public void GivenIHaveANInvalidDomain()
+        {
+            this.context["Domain"] = "qwe.lkrb.bbb";
+        }
+
 
         /// <summary>
         /// Ensures Specflow context has a valid resource in the ResourcePath parameter for the domain in the Domain parameter
@@ -48,6 +75,13 @@ namespace TeamControlium.NonGUI.UnitTests
             this.context["ResourcePath"] = "/webservicesserver/numberconversion.wso";
         }
 
+        [Given(@"I have an invalid resource path")]
+        public void GivenIHaveAnInvalidResourcePath()
+        {
+            this.context["ResourcePath"] = "/invalid/numberconversion.wso";
+        }
+
+
         /// <summary>
         /// Ensures Specflow context has a valid minimal HTTP Header in the Header parameter for the test to be performed
         /// </summary>
@@ -56,10 +90,33 @@ namespace TeamControlium.NonGUI.UnitTests
         {
             this.context["Header"] =
                    "Content-Type: text/xml\r\n" +
-                   "Accept: */*\r\n" +
+                   //                   "Accept: */*\r\n" +  not needed
                    "Host: " + this.context["Domain"] + "\r\n" +
                    "Accept-Encoding: identity\r\n" +
                    "Connection: close\r\n";
+        }
+
+        [Given(@"I build an invalid minimal HTTP Header closing the connection after the response")]
+        public void GivenIBuildAnInvalidMinimalHTTPHeaderClosingTheConnectionAfterTheResponse()
+        {
+            this.context["Header"] =
+                  "Content-Type: text/wrong\r\n" +
+                  "Host: " + this.context["Domain"] + "\r\n" +
+                  "Accept-Encoding: identity\r\n" +
+                  "Connection: close\r\n";
+        }
+
+
+        [Given(@"I build a valid minimal HTTP Header, as List, closing the connection after the response")]
+        public void GivenIBuildAValidMinimalHTTPHeaderAsListClosingTheConnectionAfterTheResponse()
+        {
+            HTTPBased.ItemList headerItems = new HTTPBased.ItemList();
+            headerItems.Add("Content-Type", "text/xml");
+//            headerItems.Add("Accept", "*/*"); not needed
+            headerItems.Add("Host", (string)this.context["Domain"]);
+            headerItems.Add("Accept-Encoding", "identity");
+            headerItems.Add("Connection", "close");
+            this.context["Header"] = headerItems;
         }
 
         /// <summary>
@@ -79,24 +136,96 @@ namespace TeamControlium.NonGUI.UnitTests
                    "</s11:Envelope>";
         }
 
+
+
         /// <summary>
         /// Use NonGUI.HTTPBased HttpPOST method with Specflow scenario context Domain, ResourcePath, Header and Payload to make an HTTP Post request.
         /// Response is stored in Specflow context Response.
         /// </summary>
         /// <remarks>Any exceptions fail the test</remarks>
-        [When(@"I post the HTML to the domain")]
-        public void WhenIPostTheHTMLToTheDomain()
+        [When(@"I perform an HTTP ""(.*)""")]
+        public void WhenITryToPostTheHTMLToTheDomain(string httpTransactionType)
         {
             HTTPBased http = new HTTPBased();
-            try
+            HTTPBased.ItemList response = new HTTPBased.ItemList();
+
+
+            switch (httpTransactionType.ToLower())
             {
-                this.context["Response"] = http.HttpPOST((string)this.context["Domain"], (string)this.context["ResourcePath"], (string)this.context["Header"], (string)this.context["Payload"]);
+                case "post":
+                    this.context["Response"] = http.HttpPOST(this.context.Keys.Any(key => key == "Domain") ? (string)this.context["Domain"] : null,
+                                                               this.context.Keys.Any(key => key == "ResourcePath") ? (string)this.context["ResourcePath"] : null,
+                                                               this.context.Keys.Any(key => key == "Query") ? (string)this.context["Query"] : null,
+                                                               this.context.Keys.Any(key => key == "Header") ? (string)this.context["Header"] : null,
+                                                               this.context.Keys.Any(key => key == "Payload") ? (string)this.context["Payload"] : null);
+                    break;
+                case "get":
+                    this.context["Response"] = http.HttpGET(this.context.Keys.Any(key => key == "Domain") ? (string)this.context["Domain"] : null,
+                                                               this.context.Keys.Any(key => key == "ResourcePath") ? (string)this.context["ResourcePath"] : null,
+                                                               this.context.Keys.Any(key => key == "Query") ? (string)this.context["Query"] : null,
+                                                               this.context.Keys.Any(key => key == "Header") ? (string)this.context["Header"] : null,
+                                                               this.context.Keys.Any(key => key == "Payload") ? (string)this.context["Payload"] : null);
+                    break;
+                default:
+                    throw new ArgumentException($"Only supporting POST and GET.  Got [{httpTransactionType}]", "httpTransactionType");
             }
-            catch (Exception ex)
+            this.context["TryException"] = http.TryException;
+        }
+
+        [When(@"I setup and perform an HTTP ""(.*)""")]
+        public void WhenISetupAndPerformAnHTTPT(string httpTransactionType)
+        {
+            HTTPBased http = new HTTPBased();
+            http.Domain = (string)this.context["Domain"];
+            http.ResourcePath = (string)this.context["ResourcePath"];
+
+            if (this.context.ContainsKey("Query"))
             {
-                Assert.Fail("Exception thrown calling HttpPOST: " + ex.Message + "\r\n" + ex.StackTrace);
+                if (this.context["Query"] is HTTPBased.ItemList)
+                {
+                    http.QueryList = (HTTPBased.ItemList)this.context["Query"];
+                }
+                else
+                {
+                    http.QueryString = (string)this.context["Query"];
+                }
+            }
+            else
+            {
+                http.QueryList = new HTTPBased.ItemList();
+            }
+
+            if (this.context.ContainsKey("Header"))
+            {
+                if (this.context["Header"] is HTTPBased.ItemList)
+                {
+                    http.HeaderList = (HTTPBased.ItemList)this.context["Header"];
+                }
+                else
+                {
+                    http.HeaderString = (string)this.context["Header"];
+                }
+            }
+            else
+            {
+                http.HeaderList = new HTTPBased.ItemList();
+            }
+
+            http.Body = this.context.ContainsKey("Payload") ? (string)this.context["Payload"] : null;
+
+            switch (httpTransactionType.ToLower())
+            {
+                case "post":
+                    this.context["Response"] = http.HttpPOST();
+                    break;
+                case "get":
+                    this.context["Response"] = http.HttpGET();
+                    break;
+                default:
+                    throw new ArgumentException($"Only supporting POST and GET.  Got [{httpTransactionType}]", "httpTransactionType");
             }
         }
+
 
         /// <summary>
         /// Validate that the Response has expected response code.
@@ -105,10 +234,43 @@ namespace TeamControlium.NonGUI.UnitTests
         [Then(@"I get an HTTP (\d*) response back")]
         public void ThenIGetAnHTTPResponseBack(int expectedResponseCode)
         {
-            Dictionary<string, string> result = (Dictionary<string, string>)this.context["Response"];
+            HTTPBased.ItemList result = (HTTPBased.ItemList)this.context["Response"];
 
             Assert.IsTrue(result.ContainsKey("StatusCode"), "Response has a Status Code");
+
             Assert.AreEqual(expectedResponseCode.ToString(), result["StatusCode"]);
         }
+
+        [Then(@"the HTTP Body contains ""(.*)""")]
+        public void ThenTheHTTPBodyContains(string expectedBodyPart)
+        {
+            HTTPBased.ItemList result = (HTTPBased.ItemList)this.context["Response"];
+
+            string actualBody = result.ContainsKey("Body") ? result["Body"].Trim().ToLower() : null;
+
+            Assert.IsTrue(actualBody.ToLower().Replace(" ", "").Contains(expectedBodyPart.ToLower().Replace(" ", "")), $"Body of HTTP response contains expected text.  Actual [{actualBody}], Expected [{expectedBodyPart}]");
+
+        }
+
+
+
+        [Then(@"transaction fails and Exception contains text ""(.*)""")]
+        public void ThenTransactionFailsAndExceptionContainsText(string expectedPartExceptionText)
+        {
+            Assert.IsFalse((bool)context["PostSuccess"], $"Verify Try... call returned false (Actual={((bool)context["PostSuccess"]?"True!! Try... call returned success!":"False")})");
+            if (!((bool)context["PostSuccess"]))
+            {
+                Exception exception = (Exception)context["TryException"];
+
+                string expectedText = (new string(expectedPartExceptionText.Where(c => char.IsLetter(c) || char.IsDigit(c)).ToArray())).Replace(" ", string.Empty).Trim().ToLower();
+                string actualText = (new string(exception.Message.Where(c => char.IsLetter(c) || char.IsDigit(c)).ToArray())).Replace(" ", string.Empty).Trim().ToLower();
+
+                Assert.IsTrue(actualText.Contains(expectedText), exception.Message + exception.StackTrace);
+
+
+            }
+        }
+
+
     }
 }
