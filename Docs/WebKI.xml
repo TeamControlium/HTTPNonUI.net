@@ -19,7 +19,7 @@
   <HelpKINode Title="Head enumeration member" Url="html/288c4a9d-ba93-2792-d988-3a7d20c8e7a3.htm" />
   <HelpKINode Title="HeaderList property" Url="html/eb98dca9-c16a-2d27-f8b9-4f839a31a56a.htm" />
   <HelpKINode Title="HeaderString property" Url="html/a33ca7f1-3bda-8c69-2c32-2184e504188e.htm" />
-  <HelpKINode Title="Http method" Url="html/efcdce4b-5246-b474-edd0-b23ff94c5e2a.htm" />
+  <HelpKINode Title="Http method" Url="html/b6d03491-82f2-2ac2-1701-459ac9669892.htm" />
   <HelpKINode Title="HTTPBased class">
     <HelpKINode Title="HTTPBased Class" Url="html/72120597-6fa2-1437-26de-f3477e705880.htm" />
     <HelpKINode Title="constructor" Url="html/d3f0c93b-43af-0dda-80c4-187ce37ce149.htm" />
@@ -32,7 +32,7 @@
   <HelpKINode Title="HTTPBased.Domain property" Url="html/88bd5771-6635-05d4-be61-21d1ba4be709.htm" />
   <HelpKINode Title="HTTPBased.HeaderList property" Url="html/eb98dca9-c16a-2d27-f8b9-4f839a31a56a.htm" />
   <HelpKINode Title="HTTPBased.HeaderString property" Url="html/a33ca7f1-3bda-8c69-2c32-2184e504188e.htm" />
-  <HelpKINode Title="HTTPBased.Http method" Url="html/efcdce4b-5246-b474-edd0-b23ff94c5e2a.htm" />
+  <HelpKINode Title="HTTPBased.Http method" Url="html/b6d03491-82f2-2ac2-1701-459ac9669892.htm" />
   <HelpKINode Title="HTTPBased.HTTPBased constructor" Url="html/d3f0c93b-43af-0dda-80c4-187ce37ce149.htm" />
   <HelpKINode Title="HTTPBased.HttpGET method" Url="html/b986b6b3-cf11-d15e-34e8-e0249ff158c0.htm" />
   <HelpKINode Title="HTTPBased.HTTPMethod property" Url="html/efbf28f1-ae37-87b3-5f2d-0c1dbb64fbe6.htm" />
@@ -51,6 +51,7 @@
   <HelpKINode Title="HTTPBased.ResourcePath property" Url="html/0f62953d-bf06-1f4a-2e51-0ac2d63ec4f1.htm" />
   <HelpKINode Title="HTTPBased.ResponseRaw property" Url="html/e621def1-0ad6-aff1-eb25-919c199a8510.htm" />
   <HelpKINode Title="HTTPBased.TryException property" Url="html/c2aa26e8-6675-354f-96ac-b4cc159dadbb.htm" />
+  <HelpKINode Title="HTTPBased.TryHttp method" Url="html/d8cde2a2-7a1d-91ac-94cd-62212e3fefe5.htm" />
   <HelpKINode Title="HTTPBased.TryHttpPOST method" Url="html/3846400b-3c11-7a5f-ccd8-fe622a04e949.htm" />
   <HelpKINode Title="HTTPBased.UseSSL property" Url="html/d14cf777-3d9e-b12f-3de5-b17a9e81965e.htm" />
   <HelpKINode Title="HttpGET method" Url="html/b986b6b3-cf11-d15e-34e8-e0249ff158c0.htm" />
@@ -95,6 +96,7 @@
   <HelpKINode Title="TeamControlium.NonGUI.TCPBased class" Url="html/fb857cb7-bc1f-e2c6-920f-35db79b9646f.htm" />
   <HelpKINode Title="Trace enumeration member" Url="html/288c4a9d-ba93-2792-d988-3a7d20c8e7a3.htm" />
   <HelpKINode Title="TryException property" Url="html/c2aa26e8-6675-354f-96ac-b4cc159dadbb.htm" />
+  <HelpKINode Title="TryHttp method" Url="html/d8cde2a2-7a1d-91ac-94cd-62212e3fefe5.htm" />
   <HelpKINode Title="TryHttpPOST method" Url="html/3846400b-3c11-7a5f-ccd8-fe622a04e949.htm" />
   <HelpKINode Title="UseSSL property" Url="html/d14cf777-3d9e-b12f-3de5-b17a9e81965e.htm" />
 </HelpKI>

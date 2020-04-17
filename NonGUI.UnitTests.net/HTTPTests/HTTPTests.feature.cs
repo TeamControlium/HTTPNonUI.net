@@ -130,7 +130,7 @@ namespace TeamControlium.NonGUI.UnitTests.HTTPTests
  testRunner.And("I build a valid XML SOAP Payload", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 10
- testRunner.When("I perform an HTTP \"POST\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I perform an HTTP \"POST\" request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 11
  testRunner.Then("I get an HTTP 200 response back", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -179,7 +179,7 @@ namespace TeamControlium.NonGUI.UnitTests.HTTPTests
  testRunner.And("I build a valid XML SOAP Payload", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 17
- testRunner.When("I setup and perform an HTTP \"POST\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I setup and perform an HTTP \"POST\" request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 18
  testRunner.Then("I get an HTTP 200 response back", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -229,7 +229,7 @@ namespace TeamControlium.NonGUI.UnitTests.HTTPTests
  testRunner.And("I build a valid XML SOAP Payload", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 24
- testRunner.When("I setup and perform an HTTP \"POST\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I setup and perform an HTTP \"POST\" request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 25
  testRunner.Then("I get an HTTP 200 response back", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -276,7 +276,7 @@ namespace TeamControlium.NonGUI.UnitTests.HTTPTests
  testRunner.And("I build a valid XML SOAP Payload", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 31
- testRunner.When("I perform an HTTP \"POST\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I perform an HTTP \"POST\" request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 32
  testRunner.Then("I get an HTTP 415 response back", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -323,7 +323,7 @@ namespace TeamControlium.NonGUI.UnitTests.HTTPTests
  testRunner.And("I build a valid XML SOAP Payload", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 38
- testRunner.When("I perform an HTTP \"POST\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I perform an HTTP \"POST\" request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 39
  testRunner.Then("I get an HTTP 404 response back", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -367,7 +367,7 @@ namespace TeamControlium.NonGUI.UnitTests.HTTPTests
  testRunner.And("I build a valid minimal HTTP Header closing the connection after the response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 44
- testRunner.When("I perform an HTTP \"GET\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I perform an HTTP \"GET\" request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 45
  testRunner.Then("I get an HTTP 200 response back", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
@@ -416,13 +416,64 @@ namespace TeamControlium.NonGUI.UnitTests.HTTPTests
  testRunner.And("I build a valid minimal HTTP Header closing the connection after the response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 51
- testRunner.When("I setup and perform an HTTP \"GET\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+ testRunner.When("I setup and perform an HTTP \"GET\" request", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 52
  testRunner.Then("I get an HTTP 200 response back", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
 #line 53
  testRunner.And("the HTTP Body contains \"postman-echo.com/get?foo1=bar1&foo2=bar2\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestMethodAttribute()]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.DescriptionAttribute("Verify simple HTTP SOAP Post with no Content-Length setting")]
+        [Microsoft.VisualStudio.TestTools.UnitTesting.TestPropertyAttribute("FeatureTitle", "HTTPTests")]
+        public virtual void VerifySimpleHTTPSOAPPostWithNoContent_LengthSetting()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Verify simple HTTP SOAP Post with no Content-Length setting", null, ((string[])(null)));
+#line 55
+ this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 56
+ testRunner.Given("I will browse to (domain/resourcepath) \"www.dataaccess.com/webservicesserver/numb" +
+                        "erconversion.wso\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 57
+ testRunner.And("I build a valid minimal HTTP Header closing the connection after the response", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 58
+ testRunner.And("I build a valid XML SOAP Payload", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 59
+ testRunner.When("I perform an HTTP \"POST\" request with Content-Length \"not added\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 60
+ testRunner.Then("I get an HTTP 411 response back", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 61
+ testRunner.And("the HTTP Body contains \"http error 411. the request must be chunked or have a con" +
+                        "tent length.\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();

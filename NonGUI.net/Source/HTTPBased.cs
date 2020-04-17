@@ -126,6 +126,9 @@ namespace TeamControlium.NonGUI
             Patch
         }
 
+        /// <summary>
+        /// Gets last exception thrown in a Try... method.
+        /// </summary>
         public Exception TryException { get; private set; } = null;
 
         /// <summary>
@@ -138,126 +141,131 @@ namespace TeamControlium.NonGUI
         /// </summary>
         public RemoteCertificateValidationCallback CertificateValidationCallback { get; set; } = null;
 
-
         /// <summary>
-        /// Get and sets the HTTP Domain
+        /// Gets or sets a value indicating whether a secure SSL (HTTPS) connection is to be used
         /// </summary>
         public bool UseSSL { get; set; }
 
         /// <summary>
-        /// Get and sets the HTTP Domain
+        /// Gets or sets the HTTP Domain
         /// </summary>
-        public String Domain
+        public string Domain
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Get and sets the HTTP Method
+        /// Gets or sets the HTTP Method
         /// </summary>
         public HTTPMethods? HTTPMethod
         {
             get
             {
-                return httpRequest.HTTPMethod;
+                return this.httpRequest.HTTPMethod;
             }
+
             set
             {
-                httpRequest.HTTPMethod = value;
+                this.httpRequest.HTTPMethod = value;
             }
         }
 
         /// <summary>
-        /// Get and sets the HTTP Resource Path
+        /// Gets or sets the HTTP Resource Path
         /// </summary>
         public string ResourcePath
         {
             get
             {
-                return httpRequest.ResourcePath;
+                return this.httpRequest.ResourcePath;
             }
+
             set
             {
-                httpRequest.ResourcePath = value;
+                this.httpRequest.ResourcePath = value;
             }
         }
 
         /// <summary>
-        /// Get and sets the HTTP Query list that is used on top line of HTTP Header
+        /// Gets or sets the HTTP Query list that is used on top line of HTTP Header
         /// </summary>
         public ItemList QueryList
         {
             get
             {
-                return httpRequest.GetQueryAsList();
+                return this.httpRequest.GetQueryAsList();
             }
+
             set
             {
-                httpRequest.SetQueryParameters(value);
+                this.httpRequest.SetQueryParameters(value);
             }
         }
 
         /// <summary>
-        /// Get and sets the HTTP Query string that is used on top line of HTTP Header
+        /// Gets or sets the HTTP Query string that is used on top line of HTTP Header
         /// </summary>
         public string QueryString
         {
             get
             {
-                return httpRequest.GetQueryAsString();
+                return this.httpRequest.GetQueryAsString();
             }
+
             set
             {
-                httpRequest.SetQueryParameters(value);
+                this.httpRequest.SetQueryParameters(value);
             }
         }
 
         /// <summary>
-        /// Get and sets the HTTP Header as a List of name/value pairs
+        /// Gets or sets the HTTP Header as a List of name/value pairs
         /// </summary>
         public ItemList HeaderList
         {
             get
             {
-                return httpRequest.GetHeaderAsList();
+                return this.httpRequest.GetHeaderAsList();
             }
+
             set
             {
-                httpRequest.SetHeader(value);
+                this.httpRequest.SetHeader(value);
             }
         }
 
         /// <summary>
-        /// Get and sets the HTTP Header as a string
+        /// Gets or sets the HTTP Header as a string
         /// </summary>
         public string HeaderString
         {
             get
             {
-                return httpRequest.GetHeaderAsString();
+                return this.httpRequest.GetHeaderAsString();
             }
+
             set
             {
-                httpRequest.SetHeader(value);
+                this.httpRequest.SetHeader(value);
             }
         }
 
         /// <summary>
-        /// Get and sets the HTTP body
+        /// Gets or sets the HTTP body
         /// </summary>
         public string Body
         {
             get
             {
-                return httpRequest.Body;
+                return this.httpRequest.Body;
             }
+
             set
             {
-                httpRequest.Body = value;
+                this.httpRequest.Body = value;
             }
         }
-
 
         /// <summary>
         /// Gets raw Response text of HTTP Request.  Data is raw HTTP response.
@@ -274,16 +282,130 @@ namespace TeamControlium.NonGUI
         /// </summary>
         private int HTTPPort => GetItemLocalOrDefault<int>("TeamControlium.HTTP", "HTTPPort", 80);
 
+        /// <summary>
+        /// Performs an HTTP GET to the required Domain/ResourcePath containing given HTTP Query-string Header and Body (if given)
+        /// </summary>
+        /// <param name="domain">Domain to POST to.  IE. <code>postman-echo.com</code></param>
+        /// <param name="resourcePath">Resource path at domain.  IE. <code>/get</code></param>
+        /// <param name="query">Query string.  IE. <code>foo1=bar1&amp;foo2=bar2</code></param>
+        /// <param name="header">HTTP Header items, not including top line (IE. HTTP Method, resource, version</param>
+        /// <param name="body">HTTP Body - Usually null for an HTTP GET but can be populated for testing purposes etc.</param>
+        /// <returns>Processed HTTP Response</returns>
+        /// <remarks>
+        /// Content-Length header item is automatically added (or, if exists in given header, modified) during building of Request.
+        /// If Connection keep-alive is used, currently request will time-out on waiting for response.  Intelligent and async functionality needs building in.
+        /// Aspects of request (such as port, header/request layout etc.) can be modified using settings stored in Repository.  See <see cref="HTTPBased"/>
+        /// and documentation for details of Repository items referenced.
+        /// <br/>
+        /// Processed HTTP Response is passed back as a collection of Name/Value pairs.  The following raw HTTP response is converted;
+        /// <code>
+        /// HTTP/1.1 200 OK<br/>
+        /// Cache-Control: private, max-age=0<br/>
+        /// Content-Length: 240<br/>
+        /// Content-Type: application/json; charset=utf-8<br/>
+        /// Server: nginx<br/>
+        /// ETag: W/"f0-EYtfNu+sVmscSzVVghi5p8EfJsA"<br/>
+        /// Vary: Accept-Encoding<br/>
+        /// Access-Control-Allow-Methods: GET, POST<br/>
+        /// Access-Control-Allow-Headers: content-type<br/>
+        /// Access-Control-Allow-Credentials: true<br/>
+        /// Strict-Transport-Security: max-age=31536000<br/>
+        /// Date: Thu, 16 Apr 2020 01:08:29 GMT<br/>
+        /// Connection: close<br/>
+        /// <br/>
+        /// {<br/>
+        ///   "args":{<br/>
+        ///     "foo1":"bar1",<br/>
+        ///     "foo2":"bar2"<br/>
+        ///   },<br/>
+        ///   "headers":{<br/>
+        ///     "x-forwarded-proto":"https",<br/>
+        ///     "host":"postman-echo.com",<br/>
+        ///     "accept-encoding":"identity",<br/>
+        ///     "content-type":"text/xml",<br/>
+        ///     "x-forwarded-port":"80"<br/>
+        ///   },<br/>
+        ///   "url":"https://postman-echo.com/get?foo1=bar1&amp;foo2=bar2"<br/>
+        /// }
+        /// </code>
+        /// Most items are self-explanatory - See <see cref="HttpPOST(string, string, string, string, string)"/> for details.
+        /// Note.  HTTP Content-Length header item in request will automatically be added (or updated if already in header)
+        /// </remarks>
         public ItemList HttpGET(string domain, string resourcePath, string query, string header, string body = null)
         {
-            return Http(HTTPMethods.Get, domain, resourcePath, query, header, body);
+            return this.Http(HTTPMethods.Get, domain, resourcePath, query, header, body);
         }
 
+        /// <summary>
+        /// Performs an HTTP GET to the required Domain/ResourcePath containing given HTTP Query-string Header and Body (if given)
+        /// </summary>
+        /// <returns>Processed HTTP Response</returns>
+        /// <remarks>
+        /// <list type="table">
+        /// GET Parameters are obtained from properties.  Examples are based on an HTTP Post to http://postman-echo.com/get?foo1=bar1&amp;foo2=bar2
+        /// <listheader>
+        /// <term>Property</term><term>Example</term><term>Comments</term>
+        /// </listheader>
+        /// <item>
+        /// <term><see cref="Domain"/></term><term>postman-echo.com</term><term>Domain to request GET to</term>
+        /// </item>
+        /// <item>
+        /// <term><see cref="ResourcePath"/></term><term>/get</term><term>Resource Path</term>
+        /// </item>
+        /// <item>
+        /// <term><see cref="QueryString"/></term><term>foo1=bar1&amp;foo2=bar2</term><term>Query String</term>
+        /// </item>
+        /// <item>
+        /// <term><see cref="HeaderString"/></term><term>Accept: */*\r\nHost: postman-echo.com\r\nAccept-Encoding: identity\r\nConnection: close\r\n</term><term>Header items String</term>
+        /// </item>
+        /// <item>
+        /// <term><see cref="Body"/></term><term>null (Not even set, NonGUI will default to null)</term><term>Body String</term>
+        /// </item>
+        /// </list>
+        /// Notes.<br/>
+        /// Content-Length header item is automatically added (or, if exists in given header, modified) during building of Request.
+        /// If Connection keep-alive is used, currently request will time-out on waiting for response.  Intelligent and async functionality needs building in.
+        /// Aspects of request (such as port, header/request layout etc.) can be modified using settings stored in Repository.  See <see cref="HTTPBased"/>
+        /// and documentation for details of Repository items referenced.
+        /// <br/>
+        /// Processed HTTP Response is passed back as a collection of Name/Value pairs.  The following raw HTTP response is converted;
+        /// <code>
+        /// HTTP/1.1 200 OK<br/>
+        /// Cache-Control: private, max-age=0<br/>
+        /// Content-Length: 240<br/>
+        /// Content-Type: application/json; charset=utf-8<br/>
+        /// Server: nginx<br/>
+        /// ETag: W/"f0-EYtfNu+sVmscSzVVghi5p8EfJsA"<br/>
+        /// Vary: Accept-Encoding<br/>
+        /// Access-Control-Allow-Methods: GET, POST<br/>
+        /// Access-Control-Allow-Headers: content-type<br/>
+        /// Access-Control-Allow-Credentials: true<br/>
+        /// Strict-Transport-Security: max-age=31536000<br/>
+        /// Date: Thu, 16 Apr 2020 01:08:29 GMT<br/>
+        /// Connection: close<br/>
+        /// <br/>
+        /// {<br/>
+        ///   "args":{<br/>
+        ///     "foo1":"bar1",<br/>
+        ///     "foo2":"bar2"<br/>
+        ///   },<br/>
+        ///   "headers":{<br/>
+        ///     "x-forwarded-proto":"https",<br/>
+        ///     "host":"postman-echo.com",<br/>
+        ///     "accept-encoding":"identity",<br/>
+        ///     "content-type":"text/xml",<br/>
+        ///     "x-forwarded-port":"80"<br/>
+        ///   },<br/>
+        ///   "url":"https://postman-echo.com/get?foo1=bar1&amp;foo2=bar2"<br/>
+        /// }
+        /// </code>
+        /// Most items are self-explanatory - See <see cref="HttpPOST(string, string, string, string, string)"/> for details.
+        /// Note.  HTTP Content-Length header item in request will automatically be added (or updated if already in <see cref="HeaderList"/>)
+        /// </remarks>
         public ItemList HttpGET()
         {
-            return Http(HTTPMethods.Get);
+            return this.Http(HTTPMethods.Get);
         }
-
 
         /// <summary>
         /// Performs an HTTP POST to the required Domain/ResourcePath containing given HTTP Header and Body
@@ -378,10 +500,11 @@ namespace TeamControlium.NonGUI
         /// <term>Body</term><term>&lt;http&gt;&lt;body&gt;hello&lt;/body&gt;&lt;/http&gt;</term><term>Raw body of HTTP Response</term>
         /// </item>
         /// </list>
+        /// Note.  HTTP Content-Length header item in request will automatically be added (or updated if already in header)
         /// </remarks>
         public ItemList HttpPOST(string domain, string resourcePath, string query, string header, string body)
         {
-            return Http(HTTPMethods.Post, domain, resourcePath, query, header, body);
+            return this.Http(HTTPMethods.Post, domain, resourcePath, query, header, body);
         }
 
         /// <summary>
@@ -477,6 +600,7 @@ namespace TeamControlium.NonGUI
         /// <term>Body</term><term>&lt;http&gt;&lt;body&gt;hello&lt;/body&gt;&lt;/http&gt;</term><term>Raw body of HTTP Response</term>
         /// </item>
         /// </list>
+        /// Note.  HTTP Content-Length header item in request will automatically be added (or updated if already in header)
         /// </remarks>
         public bool TryHttpPOST(string domain, string resourcePath, string header, string body, out ItemList response)
         {
@@ -488,7 +612,7 @@ namespace TeamControlium.NonGUI
             }
             catch (Exception ex)
             {
-                TryException = ex;
+                this.TryException = ex;
                 response = null;
                 return false;
             }
@@ -500,21 +624,21 @@ namespace TeamControlium.NonGUI
         /// <returns>Processed HTTP Response</returns>
         /// <remarks>
         /// <list type="table">
-        /// POST Parameters are obtained from properties.  Examples are based on an HTTP Post to http://www.mypostexample.com/path/to/resource.wso?para1=data1#param1=data2
+        /// POST Parameters are obtained from properties.  Examples are based on an HTTP Post to <code>http://www.mypostexample.com/path/to/resource.wso?para1=data1#param1=data2</code>
         /// <listheader>
         /// <term>Property</term><term>Example</term><term>Comments</term>
         /// </listheader>
         /// <item>
-        /// <term><see cref="Domain"/></term><term>www.mypostexample.com</term><term>Domain to Post to</term>
+        /// <term><see cref="Domain"/></term><term><code>www.mypostexample.com</code></term><term>Domain to Post to</term>
         /// </item>
         /// <item>
-        /// <term><see cref="ResourcePath"/></term><term>/path/to/resource.wso</term><term>Resource Path</term>
+        /// <term><see cref="ResourcePath"/></term><term><code>/path/to/resource.wso</code></term><term>Resource Path</term>
         /// </item>
         /// <item>
-        /// <term><see cref="QueryString"/></term><term>para1=data1#param1=data2</term><term>Query String</term>
+        /// <term><see cref="QueryString"/></term><term>para1=data1&amp;param1=data2</term><term>Query String</term>
         /// </item>
         /// <item>
-        /// <term><see cref="HeaderString"/></term><term>Accept: */*\r\nHost: www.mypostexample.com\r\nAccept-Encoding: identity\r\nConnection: close\r\n</term><term>Header items String</term>
+        /// <term><see cref="HeaderString"/></term><term><code>Accept: */*\r\nHost: www.mypostexample.com\r\nAccept-Encoding: identity\r\nConnection: close\r\n</code></term><term>Header items String</term>
         /// </item>
         /// <item>
         /// <term><see cref="Body"/></term><term>&lt;?xml version=\"1.0\"?&gt;&lt;s11:Env...oWords&gt;&lt;/s11:Body&gt;&lt;/s11:Envelope&gt;";</term><term>Body String</term>
@@ -606,14 +730,25 @@ namespace TeamControlium.NonGUI
         /// <term>Body</term><term>&lt;http&gt;&lt;body&gt;hello&lt;/body&gt;&lt;/http&gt;</term><term>Raw body of HTTP Response</term>
         /// </item>
         /// </list>
+        /// Note.  HTTP Content-Length header item in request will automatically be added (or updated if already in <see cref="HeaderList"/>)
         /// </remarks>
         public ItemList HttpPOST()
         {
-            return Http(HTTPMethods.Post);
- 
+            return this.Http(HTTPMethods.Post);
         }
 
-        private ItemList Http(HTTPMethods method)
+        /// <summary>
+        /// Sends an HTTP Request with the given request method and set properties then returns response.
+        /// </summary>
+        /// <param name="method">Required method.  See <see cref="HTTPMethods"/></param>
+        /// <param name="setContentLength">Optional parameter (default true) - Indicates if HTTP Content-Length header item should automatically be added/updated or not</param>
+        /// <returns>Response returned from request</returns>
+        /// <remarks>
+        /// If there is a timeout an Exception will be logged and thrown.<br/>
+        /// If the header Connection: keep-alive is used this WILL currently result in a timeout.<br/>
+        /// The Header item 'Content-Length' will automatically be added (or updated with actual Body length if set already)
+        /// </remarks>
+        public ItemList Http(HTTPMethods method, bool setContentLength = true)
         {
             if (string.IsNullOrWhiteSpace(this.Domain))
             {
@@ -627,19 +762,212 @@ namespace TeamControlium.NonGUI
 
             this.HTTPMethod = method;
 
-            string payLoad = httpRequest.ToString(true);
+            string payLoad = this.httpRequest.ToString(setContentLength);
 
             return this.DecodeResponse(this.tcpRequest.DoTCPRequest(null, null, this.Domain, this.HTTPPort, payLoad));
         }
 
-        public ItemList Http(HTTPMethods method, string domain, string resourcePath, string query, string header, string body)
+        /// <summary>
+        /// Sends an HTTP Request with the given request method and set properties then returns response.
+        /// </summary>
+        /// <param name="method">Required method.  See <see cref="HTTPMethods"/></param>
+        /// <param name="response">If successful, Response returned from request otherwise null. </param>
+        /// <param name="setContentLength">Optional parameter (default true) - Indicates if HTTP Content-Length header item should automatically be added/updated or not</param>
+        /// <returns>True if successful, otherwise false.  If false, <see cref="TryException"/> contains exception thrown</returns>
+        /// <remarks>
+        /// If there is a timeout an Exception will be logged and false returned.<br/>
+        /// If the header Connection: keep-alive is used this WILL currently result in a timeout.<br/>
+        /// The Header item 'Content-Length' will automatically be added (or updated with actual Body length if set already)
+        /// </remarks>
+        public bool TryHttp(HTTPMethods method, out ItemList response, bool setContentLength = true)
         {
-            FullHTTPRequest httpPayload = new FullHTTPRequest(method, resourcePath, query, header, body);
-            return this.DecodeResponse(this.tcpRequest.DoTCPRequest(null, null, domain, this.HTTPPort, httpPayload.ToString(true)));
+            try
+            {
+                if (this.HeaderList.Any(kv => kv.Key.ToLower() == "connection") && this.HeaderList.Any(kv => kv.Key.ToLower() == "connection" && kv.Value == "keep-alive"))
+                {
+                    LogWriteLine(LogLevels.TestDebug, "Warning: HTTP Post with HTTP Header containing a 'Connection: keep-alive'.  This will currently cause a timeout.  Only 'Connection: close' currently supported");
+                }
+
+                response = this.Http(method, setContentLength);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                this.TryException = ex;
+                response = null;
+                return false;
+            }
         }
 
+        /// <summary>
+        /// Sends an HTTP Request with the given request method and parameters
+        /// </summary>
+        /// <param name="method">Required method.  See <see cref="HTTPMethods"/></param>
+        /// <param name="domain">Domain to send required to</param>
+        /// <param name="resourcePath">Resource path</param>
+        /// <param name="query">Query-string to use</param>
+        /// <param name="header">HTTP Header part of request</param>
+        /// <param name="body">HTTP Body part of request</param>
+        /// <param name="setContentLength">Optional parameter (default true) - Indicates if HTTP Content-Length header item should automatically be added/updated or not</param>
+        /// <returns>Response returned from request</returns>
+        /// <remarks>
+        /// If there is a timeout an Exception will be logged and thrown.<br/>
+        /// If the header Connection: keep-alive is used this WILL currently result in a timeout.<br/>
+        /// The Header item 'Content-Length' will automatically be added (or updated with actual Body length if set already)
+        /// </remarks>
+        public ItemList Http(HTTPMethods method, string domain, string resourcePath, string query, string header, string body, bool setContentLength = true)
+        {
+            FullHTTPRequest httpPayload = new FullHTTPRequest(method, resourcePath, query, header, body);
+            return this.DecodeResponse(this.tcpRequest.DoTCPRequest(null, null, domain, this.HTTPPort, httpPayload.ToString(setContentLength)));
+        }
 
+        /// <summary>
+        /// Sends an HTTP Request with the given request method and parameters
+        /// </summary>
+        /// <param name="method">Required method.  See <see cref="HTTPMethods"/></param>
+        /// <param name="domain">Domain to send required to</param>
+        /// <param name="resourcePath">Resource path</param>
+        /// <param name="query">Query-string to use</param>
+        /// <param name="header">HTTP Header part of request</param>
+        /// <param name="body">HTTP Body part of request</param>
+        /// <param name="response">If successful, Response returned from request otherwise null. </param>
+        /// <param name="setContentLength">Optional parameter (default true) - Indicates if HTTP Content-Length header item should automatically be added/updated or not</param>
+        /// <returns>True if successful, otherwise false.  If false, <see cref="TryException"/> contains exception thrown</returns>
+        /// <remarks>
+        /// If there is a timeout an Exception will be logged and false returned.<br/>
+        /// If the header Connection: keep-alive is used this WILL currently result in a timeout.<br/>
+        /// The Header item 'Content-Length' will automatically be added (or updated with actual Body length if set already)
+        /// </remarks>
+        public bool TryHttp(HTTPMethods method, string domain, string resourcePath, string query, string header, string body, out ItemList response, bool setContentLength = true)
+        {
+            try
+            {
+                response = this.Http(method, domain, resourcePath, query, header, body, setContentLength);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                this.TryException = ex;
+                response = null;
+                return false;
+            }
+        }
 
+        /// <summary>
+        /// Performs an HTTP POST to the required Domain/ResourcePath containing given HTTP Header and Body
+        /// </summary>
+        /// <param name="response">Processed HTTP Response if successful or null if not</param>
+        /// <returns>True if successful, false if not.  See <see cref="TryException"/> for exception in case of false.</returns>
+        /// <remarks>
+        /// <list type="table">
+        /// POST Parameters are obtained from properties.  Examples are based on an HTTP Post to <code>http://www.mypostexample.com/path/to/resource.wso?para1=data1#param1=data2</code>
+        /// <listheader>
+        /// <term>Property</term><term>Example</term><term>Comments</term>
+        /// </listheader>
+        /// <item>
+        /// <term><see cref="Domain"/></term><term><code>www.mypostexample.com</code></term><term>Domain to Post to</term>
+        /// </item>
+        /// <item>
+        /// <term><see cref="ResourcePath"/></term><term><code>/path/to/resource.wso</code></term><term>Resource Path</term>
+        /// </item>
+        /// <item>
+        /// <term><see cref="QueryString"/></term><term>para1=data1&amp;param1=data2</term><term>Query String</term>
+        /// </item>
+        /// <item>
+        /// <term><see cref="HeaderString"/></term><term><code>Accept: */*\r\nHost: www.mypostexample.com\r\nAccept-Encoding: identity\r\nConnection: close\r\n</code></term><term>Header items String</term>
+        /// </item>
+        /// <item>
+        /// <term><see cref="Body"/></term><term>&lt;?xml version=\"1.0\"?&gt;&lt;s11:Env...oWords&gt;&lt;/s11:Body&gt;&lt;/s11:Envelope&gt;";</term><term>Body String</term>
+        /// </item>
+        /// </list>
+        /// Notes.<br/>
+        /// <see cref="QueryList"/> can be used for <see cref="QueryString"/>.  In which case query parameters can be loaded as Name/Value pairs.
+        /// <see cref="HeaderList"/> can be used for <see cref="HeaderString"/>.  In which case Header items parameters can be loaded as Name/Value pairs.  When this is done, <see cref="ResourcePath"/> must be loaded if valid Request is to be sent.
+        /// Content-Length header item is automatically added (or, if exists in given header, modified) during building of Request.
+        /// If Connection keep-alive is used, currently request will time-out on waiting for response.  Intelligent and async functionality needs building in.
+        /// Aspects of request (such as port, header/request layout etc.) can be modified using settings stored in Repository.  See <see cref="HTTPBased"/>
+        /// and documentation for details of Repository items referenced.
+        /// <list type="table">
+        /// Processed HTTP Response is passed back as a collection of Name/Value pairs.  The following raw HTTP response is converted;
+        /// <code>
+        /// HTTP/1.1 200 OK<br/>
+        /// Cache-Control: private, max-age=0<br/>
+        /// Content-Length: 346<br/>
+        /// Content-Type: text/xml; charset=utf-8<br/>
+        /// Server: Server<br/>
+        /// Web-Service: DataFlex 18.1<br/>
+        /// Access-Control-Allow-Origin: http://www.dataaccess.com<br/>
+        /// Access-Control-Allow-Methods: GET, POST<br/>
+        /// Access-Control-Allow-Headers: content-type<br/>
+        /// Access-Control-Allow-Credentials: true<br/>
+        /// Strict-Transport-Security: max-age=31536000<br/>
+        /// Date: Tue, 07 Apr 2020 22:16:05 GMT<br/>
+        /// Connection: close<br/>
+        /// <br/>
+        /// &lt;?xml version="1.0" encoding="utf-8"?&gt;<br/>
+        /// &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;<br/>
+        ///   &lt;soap:Body&gt;<br/>
+        ///     &lt;m:NumberToWordsResponse xmlns:m="http://www.dataaccess.com/webservicesserver/"&gt;<br/>
+        ///       &lt;m:NumberToWordsResult&gt;seventy eight &lt;/m:NumberToWordsResult&gt;<br/>
+        ///     &lt;/m:NumberToWordsResponse&gt;<br/>
+        ///   &lt;/soap:Body&gt;<br/>
+        /// &lt;/soap:Envelope&gt;
+        /// </code>
+        /// Most items are self-explanatory;
+        /// <listheader>
+        /// <term>Item Name</term><term>Example</term><term>Comments</term>
+        /// </listheader>
+        /// <item>
+        /// <term>HTTPVersion</term><term>1.1</term><term>HTTP Version - Always in Processed response</term>
+        /// </item>
+        /// <item>
+        /// <term>StatusCode</term><term>200</term><term>Status code - Always in Processed response</term>
+        /// </item>
+        /// <item>
+        /// <term>StatusText</term><term>OK</term><term>Status text - Always in Processed response</term>
+        /// </item>
+        /// <item>
+        /// <term>Cache-Control</term><term>private; max-age=0</term><term>Dependant on server and application</term>
+        /// </item>
+        /// <item>
+        /// <term>Content-Length</term><term>346</term><term>Number of characters in Body - Always in Processed response</term>
+        /// </item>
+        /// <item>
+        /// <term>Content-Type</term><term>text/xml; charset=utf-8</term><term>Type of body data - Always in Processed response</term>
+        /// </item>
+        /// <item>
+        /// <term>Server</term><term>Server</term><term>Dependant on server and application</term>
+        /// </item>
+        /// <item>
+        /// <term>Web-Service</term><term>DataFlex 18.1</term><term>Dependant on server and application</term>
+        /// </item>
+        /// <item>
+        /// <term>Access-Control-Allow-Origin</term><term>http</term><term></term>
+        /// </item>
+        /// <item>
+        /// <term>Access-Control-Allow-Methods</term><term>GET</term><term>POST</term><term></term>
+        /// </item>
+        /// <item>
+        /// <term>Access-Control-Allow-Headers</term><term>content-type</term><term></term>
+        /// </item>
+        /// <item>
+        /// <term>Access-Control-Allow-Credentials</term><term>true</term><term></term>
+        /// </item>
+        /// <item>
+        /// <term>Strict-Transport-Security</term><term>max-age=31536000</term><term></term>
+        /// </item>
+        /// <item>
+        /// <term>Date</term><term>Tue, 07 Apr 2020 22</term><term>Server date</term>
+        /// </item>
+        /// <item>
+        /// <term>Connection</term><term>close</term><term>Indicates what state the Server will hold connection at end of response - Always in Processed response</term>
+        /// </item>
+        /// <item>
+        /// <term>Body</term><term>&lt;http&gt;&lt;body&gt;hello&lt;/body&gt;&lt;/http&gt;</term><term>Raw body of HTTP Response</term>
+        /// </item>
+        /// </list>
+        /// Note.  HTTP Content-Length header item in request will automatically be added (or updated if already in <see cref="HeaderList"/>)
+        /// </remarks>
         public bool TryHttpPOST(out ItemList response)
         {
             try
@@ -656,20 +984,18 @@ namespace TeamControlium.NonGUI
 
                 this.HTTPMethod = HTTPMethods.Post;
 
-                string payLoad = httpRequest.ToString(true);
+                string payLoad = this.httpRequest.ToString(true);
 
                 response = this.DecodeResponse(this.tcpRequest.DoTCPRequest(null, null, this.Domain, this.HTTPPort, payLoad));
                 return true;
             }
             catch (Exception ex)
             {
-                TryException = ex;
+                this.TryException = ex;
                 response = null;
                 return false;
             }
         }
-
- 
 
         /// <summary>
         /// Decode HTTP Response into easily read Name/Value pair details within List type
@@ -708,7 +1034,7 @@ namespace TeamControlium.NonGUI
                 string bodyArea = rawData.Substring(rawData.IndexOf("\r\n\r\n") + 4, rawData.Length - rawData.IndexOf("\r\n\r\n") - 4);
 
                 // Split & check first line
-                string[] firstLineSplit = headerArea.Split('\r')[0].Split(' ',3);
+                string[] firstLineSplit = headerArea.Split('\r')[0].Split(' ', 3);
                 if (firstLineSplit.Length < 3 || !firstLineSplit[0].Contains('/'))
                 {
                     string firstLine = headerArea.Split('\r')[0];
@@ -799,36 +1125,62 @@ namespace TeamControlium.NonGUI
             {
                 throw new InvalidHTTPResponse("[HTTP]DecodeResponse: Fatal error decoding raw response string header)", ex);
             }
+
             return returnData;
         }
 
-        public class ItemList : List<KeyValuePair<string,string>>
+        /// <summary>
+        /// Lists items as Key Value pairs allowing multiple items with same key
+        /// </summary>
+        public class ItemList : List<KeyValuePair<string, string>>
         {
-            public ItemList(List<KeyValuePair<string,string>> initialList) : base(initialList)
+            /// <summary>
+            /// Initialises a new instance of the <see cref="ItemList" /> class. Prepopulates with the List of Key-Value pairs passed. 
+            /// </summary>
+            /// <param name="initialList">List of Key-Value pairs to pre-populate with</param>
+            public ItemList(List<KeyValuePair<string, string>> initialList) : base(initialList)
             {
             }
 
+            /// <summary>
+            /// Initialises a new instance of the <see cref="ItemList" /> class.
+            /// </summary>
             public ItemList() : base()
             {
-
             }
 
-            public void Add(string key, string value)
-            {
-                base.Add(new KeyValuePair<string, string>(key, value));
-            }
-
-            public bool ContainsKey(string key)
-            {
-                return this.Any(item => item.Key == key);
-            }
-
+            /// <summary>
+            /// Gets value of first instance of an item matching the given key
+            /// </summary>
+            /// <param name="key">Key text to search for in <see cref="ItemList"/></param>
+            /// <returns>Value of first matching item</returns>
+            /// <remarks>If no items found an exception is thrown</remarks>
             public string this[string key]
             {
                 get
                 {
                     return this.Where(item => item.Key == key).GroupBy(item => item.Key).Select(item => item.First()).First().Value;
                 }
+            }
+
+            /// <summary>
+            /// Adds new item to the list.
+            /// </summary>
+            /// <param name="key">Key of added item</param>
+            /// <param name="value">Value of added item</param>
+            public void Add(string key, string value)
+            {
+                base.Add(new KeyValuePair<string, string>(key, value));
+            }
+
+            /// <summary>
+            /// Indicates if <see cref="ItemList"/> contains a key matching the given key text
+            /// </summary>
+            /// <param name="key">Key text to search for in <see cref="ItemList"/></param>
+            /// <returns>True is matching key found else false</returns>
+            public bool ContainsKey(string key)
+            {
+                return this.Any(item => item.Key == key);
             }
         }
 
@@ -858,7 +1210,7 @@ namespace TeamControlium.NonGUI
         /// </item>
         /// </list>
         /// </remarks>
-            private class FullHTTPRequest
+        private class FullHTTPRequest
         {
             /// <summary>
             /// We store the header as a string as this is Test oriented.  Although the Header of an HTTP document is Name: Value pairs the test may have loaded
@@ -873,7 +1225,10 @@ namespace TeamControlium.NonGUI
             /// customisation the test has added.
             /// </summary>
             private string query;
-           
+
+            /// <summary>
+            /// Initialises a new instance of the <see cref="FullHTTPRequest" /> class.
+            /// </summary>
             public FullHTTPRequest()
             {
                 this.HTTPMethod = null;
@@ -881,7 +1236,6 @@ namespace TeamControlium.NonGUI
                 this.SetHeader((string)null);
                 this.SetQueryParameters((string)null);
                 this.Body = string.Empty;
-
             }
             
             /// <summary>
@@ -1007,7 +1361,7 @@ namespace TeamControlium.NonGUI
             }
 
             /// <summary>
-            /// Stores the required HTTP Method.  May be null in which case it is ignored.  This may be the case when the user has explicitly put the HPP Method in the request string.
+            /// Gets or sets the HTTP Method to be used in header when building a request.  May be null in which case it is ignored.  This may be the case when the user has explicitly put the HPP Method in the request string.
             /// </summary>
             public HTTPMethods? HTTPMethod
             {
@@ -1021,7 +1375,7 @@ namespace TeamControlium.NonGUI
             public string HttpURLQuerySeparator => GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "HTTPURL_QuerySeparator", "?");
 
             /// <summary>
-            /// Separator between query items in URL.  Should be &
+            /// Separator between query items in URL.  Should be &amp;
             /// </summary>
             public string HttpURLQueryParameterSeparator => GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "HTTPURL_ParameterSeparator", "&");
 
@@ -1073,7 +1427,7 @@ namespace TeamControlium.NonGUI
             /// <summary>
             /// Gets Header from Repository data. If null Header is passed in to a call (or a public Web method with no option to set a Header is used), this property is used.  Property is populated from
             /// the local Repository item [TeamControlium.HTTPNonUI,HTTPHeader] which can be a string or List&lt;KeyValuePair&lt;string, string&gt;&gt;.  If this has not been set an empty
-            /// header is used.  If Repository item [TeamControlium.HTTPNonUI,HTTPHeader] contains a type NOT string or List&lt;KeyValuePair&lt;string, string&gt;&gt an exception is thrown.
+            /// header is used.  If Repository item [TeamControlium.HTTPNonUI,HTTPHeader] contains a type NOT string or List&lt;KeyValuePair&lt;string, string&gt;&gt; an exception is thrown.
             /// </summary>
             private dynamic HeaderDefault
             {
@@ -1098,8 +1452,8 @@ namespace TeamControlium.NonGUI
 
             /// <summary>
             /// Gets Query string from Repository. If null Query Parameters is passed in to a call (or a public Web method with no option to set a Header is used), this property is used.  Property is populated from
-            /// the local Repository item [TeamControlium.HTTPNonUI,HTTPQuery] which can be a string or List&lt;KeyValuePair&lt;string, string&gt;&gt.  If this has not been set an empty
-            /// header is used.  If Repository item [TeamControlium.HTTPNonUI,HTTPQuery] contains a type NOT string or List&lt;KeyValuePair&lt;string, string&gt;&gt an exception is thrown. If populated,
+            /// the local Repository item [TeamControlium.HTTPNonUI,HTTPQuery] which can be a string or List&lt;KeyValuePair&lt;string, string&gt;&gt;.  If this has not been set an empty
+            /// header is used.  If Repository item [TeamControlium.HTTPNonUI,HTTPQuery] contains a type NOT string or List&lt;KeyValuePair&lt;string, string&gt;&gt; an exception is thrown. If populated,
             /// the query part of the URL Resource Path is populated IRRELEVANT of the HTTP Method used - this is to ensure testing (and negative testing ) is possible.  It is the
             /// responsibility of the test code to ensure correct state of the Query string.
             /// </summary>
@@ -1251,9 +1605,10 @@ namespace TeamControlium.NonGUI
                     // We split each item into Name and Value based on the HeaderItemDelimiter.  A line may have TWO delimiters, so we max on 2.
                     var itemNameValue = headerItem.Split(this.HeaderItemDelimiter, 2);
                     var itemName = string.IsNullOrEmpty(itemNameValue[0]) ? string.Empty : itemNameValue[0];
-                    var itemValue = (itemNameValue.Length==1)?string.Empty:string.IsNullOrEmpty(itemNameValue[1]) ? string.Empty : itemNameValue[1];
+                    var itemValue = (itemNameValue.Length == 1) ? string.Empty : string.IsNullOrEmpty(itemNameValue[1]) ? string.Empty : itemNameValue[1];
                     headerList.Add(new KeyValuePair<string, string>(itemName, itemValue));
                 }
+
                 return headerList;
             }
 
@@ -1292,8 +1647,8 @@ namespace TeamControlium.NonGUI
                     var itemValue = (itemNameValue.Length == 1) ? string.Empty : string.IsNullOrEmpty(itemNameValue[1]) ? string.Empty : itemNameValue[1];
                     queryList.Add(new KeyValuePair<string, string>(itemName, itemValue));
                 }
-                return queryList;
 
+                return queryList;
             }
 
             /// <summary>
@@ -1302,7 +1657,7 @@ namespace TeamControlium.NonGUI
             /// <returns>Current HTTP query string</returns>
             public string GetQueryAsString()
             {
-                return query ?? string.Empty;
+                return this.query ?? string.Empty;
             }
 
             /// <summary>
@@ -1390,16 +1745,16 @@ namespace TeamControlium.NonGUI
                     else
                     {
                         // We dont already have a Content-Length header so add.
-                        this.header += this.HeaderContentLengthTitle + this.HeaderItemDelimiter + (this.SpaceAfterHeaderItemDelimiter ? " " : string.Empty) + (string.IsNullOrEmpty(this.Body)?"0":(this.Body.Length.ToString()) + this.HeaderItemLineTerminator);
+                        this.header += this.HeaderContentLengthTitle + this.HeaderItemDelimiter + (this.SpaceAfterHeaderItemDelimiter ? " " : string.Empty) + (string.IsNullOrEmpty(this.Body) ? "0" : this.Body.Length.ToString() + this.HeaderItemLineTerminator);
                     }
                 }
 
                 // Bring top line (if we have one), header and body together in harmony.  With nice delimiters between them
-                return ((topLine == null) ? string.Empty : topLine + this.HeaderItemLineTerminator) + this.header + this.HeaderBodyDelimiter + (string.IsNullOrEmpty(this.Body)? this.HeaderBodyDelimiter : this.Body);
+                return ((topLine == null) ? string.Empty : topLine + this.HeaderItemLineTerminator) + this.header + this.HeaderBodyDelimiter + (string.IsNullOrEmpty(this.Body) ? this.HeaderBodyDelimiter : this.Body);
             }
 
             /// <summary>
-            /// Builds HTTP Request Header top line using <see cref="httpMethod"/>, <see cref="resourcePath"/> and <see cref="query"/>.  Query string
+            /// Builds HTTP Request Header top line using <see cref="HTTPMethod"/>, <see cref="ResourcePath"/> and <see cref="QueryString"/>/<see cref="QueryList"/>.  Query string
             /// is delimited from Resource path using <see cref="HttpURLQuerySeparator"/>.
             /// </summary>
             /// <returns>Built top line of required HTTP Request</returns>

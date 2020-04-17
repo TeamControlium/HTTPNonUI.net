@@ -41,9 +41,9 @@ namespace TeamControlium.NonGUI.UnitTests
         {
             if (string.IsNullOrEmpty(domainResource))
             {
-                this.context["Domain"] = "";
-                this.context["ResourcePath"] = "";
-                this.context["Query"] = "";
+                this.context["Domain"] = string.Empty;
+                this.context["ResourcePath"] = string.Empty;
+                this.context["Query"] = string.Empty;
             }
             else
             {
@@ -55,7 +55,6 @@ namespace TeamControlium.NonGUI.UnitTests
             }
         }
 
-
         /// <summary>
         /// Ensures Specflow context has an invalid domain in the Domain parameter
         /// </summary>
@@ -64,7 +63,6 @@ namespace TeamControlium.NonGUI.UnitTests
         {
             this.context["Domain"] = "qwe.lkrb.bbb";
         }
-
 
         /// <summary>
         /// Ensures Specflow context has a valid resource in the ResourcePath parameter for the domain in the Domain parameter
@@ -75,12 +73,14 @@ namespace TeamControlium.NonGUI.UnitTests
             this.context["ResourcePath"] = "/webservicesserver/numberconversion.wso";
         }
 
+        /// <summary>
+        /// Ensures Specflow context has an invalid resource in the ResourcePath parameter for the domain in the Domain parameter
+        /// </summary>
         [Given(@"I have an invalid resource path")]
         public void GivenIHaveAnInvalidResourcePath()
         {
             this.context["ResourcePath"] = "/invalid/numberconversion.wso";
         }
-
 
         /// <summary>
         /// Ensures Specflow context has a valid minimal HTTP Header in the Header parameter for the test to be performed
@@ -90,12 +90,14 @@ namespace TeamControlium.NonGUI.UnitTests
         {
             this.context["Header"] =
                    "Content-Type: text/xml\r\n" +
-                   //                   "Accept: */*\r\n" +  not needed
                    "Host: " + this.context["Domain"] + "\r\n" +
                    "Accept-Encoding: identity\r\n" +
                    "Connection: close\r\n";
         }
 
+        /// <summary>
+        /// Ensures Specflow context has an invalid minimal HTTP Header in the Header parameter for the test to be performed.  Invalid due to invalid Content-Type
+        /// </summary>
         [Given(@"I build an invalid minimal HTTP Header closing the connection after the response")]
         public void GivenIBuildAnInvalidMinimalHTTPHeaderClosingTheConnectionAfterTheResponse()
         {
@@ -106,13 +108,17 @@ namespace TeamControlium.NonGUI.UnitTests
                   "Connection: close\r\n";
         }
 
-
+        /// <summary>
+        /// A valid HTTP Header list is built with just Content-Type, Host, Accept-Encoding and Connection
+        /// </summary>
+        /// <remarks>
+        /// Content-Type set to text/xml, Host obtained from Specflow context "<code>Domain</code>", Accept-Encoding set to identity (IE. Clear text) and Connection set to close (
+        /// </remarks>
         [Given(@"I build a valid minimal HTTP Header, as List, closing the connection after the response")]
         public void GivenIBuildAValidMinimalHTTPHeaderAsListClosingTheConnectionAfterTheResponse()
         {
             HTTPBased.ItemList headerItems = new HTTPBased.ItemList();
             headerItems.Add("Content-Type", "text/xml");
-//            headerItems.Add("Accept", "*/*"); not needed
             headerItems.Add("Host", (string)this.context["Domain"]);
             headerItems.Add("Accept-Encoding", "identity");
             headerItems.Add("Connection", "close");
@@ -136,31 +142,31 @@ namespace TeamControlium.NonGUI.UnitTests
                    "</s11:Envelope>";
         }
 
-
-
         /// <summary>
         /// Use NonGUI.HTTPBased HttpPOST method with Specflow scenario context Domain, ResourcePath, Header and Payload to make an HTTP Post request.
         /// Response is stored in Specflow context Response.
         /// </summary>
+        /// <param name="httpTransactionType">Post or Get</param>
         /// <remarks>Any exceptions fail the test</remarks>
-        [When(@"I perform an HTTP ""(.*)""")]
+        [When(@"I perform an HTTP ""(.*)"" request")]
         public void WhenITryToPostTheHTMLToTheDomain(string httpTransactionType)
         {
             HTTPBased http = new HTTPBased();
             HTTPBased.ItemList response = new HTTPBased.ItemList();
 
-
             switch (httpTransactionType.ToLower())
             {
                 case "post":
-                    this.context["Response"] = http.HttpPOST(this.context.Keys.Any(key => key == "Domain") ? (string)this.context["Domain"] : null,
+                    this.context["Response"] = http.HttpPOST(
+                                                               this.context.Keys.Any(key => key == "Domain") ? (string)this.context["Domain"] : null,
                                                                this.context.Keys.Any(key => key == "ResourcePath") ? (string)this.context["ResourcePath"] : null,
                                                                this.context.Keys.Any(key => key == "Query") ? (string)this.context["Query"] : null,
                                                                this.context.Keys.Any(key => key == "Header") ? (string)this.context["Header"] : null,
                                                                this.context.Keys.Any(key => key == "Payload") ? (string)this.context["Payload"] : null);
                     break;
                 case "get":
-                    this.context["Response"] = http.HttpGET(this.context.Keys.Any(key => key == "Domain") ? (string)this.context["Domain"] : null,
+                    this.context["Response"] = http.HttpGET(
+                                                               this.context.Keys.Any(key => key == "Domain") ? (string)this.context["Domain"] : null,
                                                                this.context.Keys.Any(key => key == "ResourcePath") ? (string)this.context["ResourcePath"] : null,
                                                                this.context.Keys.Any(key => key == "Query") ? (string)this.context["Query"] : null,
                                                                this.context.Keys.Any(key => key == "Header") ? (string)this.context["Header"] : null,
@@ -169,10 +175,102 @@ namespace TeamControlium.NonGUI.UnitTests
                 default:
                     throw new ArgumentException($"Only supporting POST and GET.  Got [{httpTransactionType}]", "httpTransactionType");
             }
+
             this.context["TryException"] = http.TryException;
         }
 
-        [When(@"I setup and perform an HTTP ""(.*)""")]
+        /// <summary>
+        /// Uses Http method to make an HTTP request with ability to set whether Content-Length header is added or not
+        /// </summary>
+        /// <param name="httpTransactionType">Post or Get</param>
+        /// <param name="addContentLength">Text 'added' or 'not added'</param>
+        /// <remarks>
+        /// The success status of the call is stored in Specflow context 'HTTPRequestSuccess' and response in 'Response'.<br/>
+        /// Exceptions are unhandled.
+        /// </remarks>
+        [When(@"I perform an HTTP ""(.*)"" request with Content-Length ""(.*)""")]
+        public void WhenIPerformAnHTTPRequestWithContent_Length(string httpTransactionType, string addContentLength)
+        {
+            HTTPBased http = new HTTPBased();
+
+            switch (httpTransactionType.ToLower())
+            {
+                case "post":
+                    this.context["Response"] = http.Http(
+                                                               HTTPBased.HTTPMethods.Post,
+                                                               this.context.Keys.Any(key => key == "Domain") ? (string)this.context["Domain"] : null,
+                                                               this.context.Keys.Any(key => key == "ResourcePath") ? (string)this.context["ResourcePath"] : null,
+                                                               this.context.Keys.Any(key => key == "Query") ? (string)this.context["Query"] : null,
+                                                               this.context.Keys.Any(key => key == "Header") ? (string)this.context["Header"] : null,
+                                                               this.context.Keys.Any(key => key == "Payload") ? (string)this.context["Payload"] : null,
+                                                               addContentLength.Trim().ToLower() == "added" ? true : false);
+                    break;
+                case "get":
+                    this.context["Response"] = http.Http(
+                                                               HTTPBased.HTTPMethods.Get,
+                                                               this.context.Keys.Any(key => key == "Domain") ? (string)this.context["Domain"] : null,
+                                                               this.context.Keys.Any(key => key == "ResourcePath") ? (string)this.context["ResourcePath"] : null,
+                                                               this.context.Keys.Any(key => key == "Query") ? (string)this.context["Query"] : null,
+                                                               this.context.Keys.Any(key => key == "Header") ? (string)this.context["Header"] : null,
+                                                               this.context.Keys.Any(key => key == "Payload") ? (string)this.context["Payload"] : null,   
+                                                               addContentLength.Trim().ToLower() == "added" ? true : false);
+                    break;
+                default:
+                    throw new ArgumentException($"Only supporting POST and GET.  Got [{httpTransactionType}]", "httpTransactionType");
+            }
+        }
+
+        /// <summary>
+        /// Uses TryHttp to make an HTTP request with ability to set whether Content-Length header is added or not
+        /// </summary>
+        /// <param name="httpTransactionType">Post or Get</param>
+        /// <param name="addContentLength">Text 'added' or 'not added'</param>
+        /// <remarks>The success status of the call is stored in Specflow context 'HTTPRequestSuccess' and response in 'Response'.</remarks>
+        [When(@"I try an HTTP ""(.*)"" request with Content-Length ""(.*)""")]
+        public void WhenITryAnHTTPRequestWithContent_Length(string httpTransactionType, string addContentLength)
+        {
+            HTTPBased http = new HTTPBased();
+            HTTPBased.ItemList response = new HTTPBased.ItemList();
+
+            switch (httpTransactionType.ToLower())
+            {
+                case "post":
+                    this.context["HTTPRequestSuccess"] = http.TryHttp(
+                                                               HTTPBased.HTTPMethods.Post,
+                                                               this.context.Keys.Any(key => key == "Domain") ? (string)this.context["Domain"] : null,
+                                                               this.context.Keys.Any(key => key == "ResourcePath") ? (string)this.context["ResourcePath"] : null,
+                                                               this.context.Keys.Any(key => key == "Query") ? (string)this.context["Query"] : null,
+                                                               this.context.Keys.Any(key => key == "Header") ? (string)this.context["Header"] : null,
+                                                               this.context.Keys.Any(key => key == "Payload") ? (string)this.context["Payload"] : null,
+                                                               out response,
+                                                               addContentLength.Trim().ToLower() == "added" ? true : false);
+                    this.context["Response"] = response;
+                    break;
+                case "get":
+                    this.context["HTTPRequestSuccess"] = http.TryHttp(
+                                                               HTTPBased.HTTPMethods.Get,
+                                                               this.context.Keys.Any(key => key == "Domain") ? (string)this.context["Domain"] : null,
+                                                               this.context.Keys.Any(key => key == "ResourcePath") ? (string)this.context["ResourcePath"] : null,
+                                                               this.context.Keys.Any(key => key == "Query") ? (string)this.context["Query"] : null,
+                                                               this.context.Keys.Any(key => key == "Header") ? (string)this.context["Header"] : null,
+                                                               this.context.Keys.Any(key => key == "Payload") ? (string)this.context["Payload"] : null,
+                                                               out response,
+                                                               addContentLength.Trim().ToLower() == "added" ? true : false);
+                    this.context["Response"] = response;
+                    break;
+                default:
+                    throw new ArgumentException($"Only supporting POST and GET.  Got [{httpTransactionType}]", "httpTransactionType");
+            }
+
+            this.context["TryException"] = http.TryException;
+        }
+
+        /// <summary>
+        /// Loads HTTPBased type's HTTP properties from Specflow context data and calls HttpPOST or HttpGET as required.
+        /// </summary>
+        /// <param name="httpTransactionType">Post or Get</param>
+        /// <remarks>Loads Specflow context 'Response' with HTTP response.  Any Exceptions are not handled.</remarks>
+        [When(@"I setup and perform an HTTP ""(.*)"" request")]
         public void WhenISetupAndPerformAnHTTPT(string httpTransactionType)
         {
             HTTPBased http = new HTTPBased();
@@ -226,7 +324,6 @@ namespace TeamControlium.NonGUI.UnitTests
             }
         }
 
-
         /// <summary>
         /// Validate that the Response has expected response code.
         /// </summary>
@@ -241,6 +338,11 @@ namespace TeamControlium.NonGUI.UnitTests
             Assert.AreEqual(expectedResponseCode.ToString(), result["StatusCode"]);
         }
 
+        /// <summary>
+        /// Validates passed text matches text in Specflow context 'Response'.
+        /// </summary>
+        /// <param name="expectedBodyPart">Expected text</param>
+        /// <remarks>Spaces are ignored in comparison</remarks>
         [Then(@"the HTTP Body contains ""(.*)""")]
         public void ThenTheHTTPBodyContains(string expectedBodyPart)
         {
@@ -248,29 +350,27 @@ namespace TeamControlium.NonGUI.UnitTests
 
             string actualBody = result.ContainsKey("Body") ? result["Body"].Trim().ToLower() : null;
 
-            Assert.IsTrue(actualBody.ToLower().Replace(" ", "").Contains(expectedBodyPart.ToLower().Replace(" ", "")), $"Body of HTTP response contains expected text.  Actual [{actualBody}], Expected [{expectedBodyPart}]");
-
+            Assert.IsTrue(actualBody.ToLower().Replace(" ", string.Empty).Contains(expectedBodyPart.ToLower().Replace(" ", string.Empty)), $"Body of HTTP response contains expected text.  Actual [{actualBody}], Expected [{expectedBodyPart}]");
         }
 
-
-
-        [Then(@"transaction fails and Exception contains text ""(.*)""")]
+        /// <summary>
+        /// Verifies Specflow context 'HTTPRequestSuccess' is false and that text in 'TryException' matches passed text
+        /// </summary>
+        /// <param name="expectedPartExceptionText">Text to compare Specflow context 'TryException' against.</param>
+        /// <remarks>Comparison ignores non alphanumerics</remarks>
+        [Then(@"and Exception contains text ""(.*)""")]
         public void ThenTransactionFailsAndExceptionContainsText(string expectedPartExceptionText)
         {
-            Assert.IsFalse((bool)context["PostSuccess"], $"Verify Try... call returned false (Actual={((bool)context["PostSuccess"]?"True!! Try... call returned success!":"False")})");
-            if (!((bool)context["PostSuccess"]))
+            Assert.IsFalse((bool)this.context["HTTPRequestSuccess"], $"Verify Try... call returned false (Actual={((bool)this.context["HTTPRequestSuccess"]?"True!! Try... call returned success!":"False")})");
+            if (!((bool)this.context["HTTPRequestSuccess"]))
             {
-                Exception exception = (Exception)context["TryException"];
+                Exception exception = (Exception)this.context["TryException"];
 
                 string expectedText = (new string(expectedPartExceptionText.Where(c => char.IsLetter(c) || char.IsDigit(c)).ToArray())).Replace(" ", string.Empty).Trim().ToLower();
                 string actualText = (new string(exception.Message.Where(c => char.IsLetter(c) || char.IsDigit(c)).ToArray())).Replace(" ", string.Empty).Trim().ToLower();
 
                 Assert.IsTrue(actualText.Contains(expectedText), exception.Message + exception.StackTrace);
-
-
             }
         }
-
-
     }
 }
