@@ -19,6 +19,7 @@
     <PackageTags>TeamControlium testautomation functional library http tcp webservices rest json</PackageTags>
     <PackageReleaseNotes>Full re-write and addition of unit tests</PackageReleaseNotes>
     <NeutralLanguage>English (Australia)</NeutralLanguage>
+    <Copyright>Copyright 2018 - Mat Walker and the Team Controlium contributors</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
