@@ -5,7 +5,7 @@
     <RootNamespace>NonGUI.net</RootNamespace>
     <AssemblyName>TeamControlium.NonGUI</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.0</Version>
+    <Version>2.0.1</Version>
     <Authors>TeamControlium Contributors</Authors>
     <Company>TeamControlium ContributorsTeamControlium Contributors</Company>
     <Product>TeamControlium NonGUI.net</Product>
@@ -20,8 +20,8 @@
     <PackageReleaseNotes>Full re-write and addition of unit tests</PackageReleaseNotes>
     <NeutralLanguage>English (Australia)</NeutralLanguage>
     <Copyright>Copyright 2018 - Mat Walker and the Team Controlium contributors</Copyright>
-    <AssemblyVersion>2.0.1.0</AssemblyVersion>
-    <FileVersion>2.0.1.0</FileVersion>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
