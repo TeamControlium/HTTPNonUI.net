@@ -1,14 +1,17 @@
 <StyleCopSettings Version="105">
   <GlobalSettings>
     <CollectionProperty Name="RecognizedWords">
+      <Value>alphanumerics</Value>
+      <Value>cloneable</Value>
+      <Value>Controlium</Value>
+      <Value>Detokeniser</Value>
+      <Value>LogToConsole</Value>
+      <Value>param</Value>
       <Value>Specflow</Value>
       <Value>stdout</Value>
-      <Value>LogToConsole</Value>
-      <Value>Detokeniser</Value>
-      <Value>Controlium</Value>
-      <Value>cloneable</Value>
-      <Value>alphanumerics</Value>
-      <Value>param</Value>
+      <Value>int</Value>
+      <Value>mypostexample</Value>
+      <Value>wso</Value>
     </CollectionProperty>
     <StringProperty Name="MergeSettingsFiles">NoMerge</StringProperty>
     <StringProperty Name="Culture">en-GB</StringProperty>

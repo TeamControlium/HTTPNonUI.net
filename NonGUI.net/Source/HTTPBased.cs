@@ -23,10 +23,10 @@ namespace TeamControlium.NonGUI
     /// <term>Category</term><term>Item</term><term>Type</term><term>Default Value</term><term>Comments</term>
     /// </listheader>
     /// <item>
-    /// <term>TeamControlium.HTTP</term><term>SSLPort</term><term><code>int</code></term><term>443</term><term>Port used for SSL tunnelled HTTP (HTTPS) communication</term>
+    /// <term>TeamControlium.HTTP</term><term>SSLPort</term><term>int</term><term>443</term><term>Port used for SSL tunnelled HTTP (HTTPS) communication</term>
     /// </item>
     /// <item>
-    /// <term>TeamControlium.HTTP</term><term>HTTPPort</term><term><code>int</code></term><term>80</term><term>Port used for unsecure HTTP communication</term>
+    /// <term>TeamControlium.HTTP</term><term>HTTPPort</term><term>int</term><term>80</term><term>Port used for unsecure HTTP communication</term>
     /// </item>
     /// </list>
     /// </remarks>
@@ -48,7 +48,7 @@ namespace TeamControlium.NonGUI
         private FullHTTPRequest httpRequest;
 
         /// <summary>
-        /// Initialises a new instance of the <see cref="HTTPBased" /> class. Used for testing an HTTP interface when used for Non-UI interaction (IE. WebServices, <code>JSON</code> etc...)
+        /// Initialises a new instance of the <see cref="HTTPBased" /> class. Used for testing an HTTP interface when used for Non-UI interaction (IE. WebServices, JSON etc...)
         /// </summary>
         public HTTPBased()
         {
@@ -285,9 +285,9 @@ namespace TeamControlium.NonGUI
         /// <summary>
         /// Performs an HTTP GET to the required Domain/ResourcePath containing given HTTP Query-string Header and Body (if given)
         /// </summary>
-        /// <param name="domain">Domain to POST to.  IE. <code>postman-echo.com</code></param>
-        /// <param name="resourcePath">Resource path at domain.  IE. <code>/get</code></param>
-        /// <param name="query">Query string.  IE. <code>foo1=bar1&amp;foo2=bar2</code></param>
+        /// <param name="domain">Domain to POST to.  IE. postman-echo.com</param>
+        /// <param name="resourcePath">Resource path at domain.  IE. /get</param>
+        /// <param name="query">Query string.  IE. foo1=bar1&amp;foo2=bar2</param>
         /// <param name="header">HTTP Header items, not including top line (IE. HTTP Method, resource, version</param>
         /// <param name="body">HTTP Body - Usually null for an HTTP GET but can be populated for testing purposes etc.</param>
         /// <returns>Processed HTTP Response</returns>
@@ -410,8 +410,8 @@ namespace TeamControlium.NonGUI
         /// <summary>
         /// Performs an HTTP POST to the required Domain/ResourcePath containing given HTTP Header and Body
         /// </summary>
-        /// <param name="domain">Domain to POST to.  IE. <code>www.mytestsite.com</code></param>
-        /// <param name="resourcePath">Resource path at domain.  IE. <code>respource/path</code></param>
+        /// <param name="domain">Domain to POST to.</param>
+        /// <param name="resourcePath">Resource path at domain.</param>
         /// <param name="query">Query string.  For a POST this should be empty or null.  Here for test purposes.</param>
         /// <param name="header">HTTP Header items, not including top line (IE. HTTP Method, resource, version</param>
         /// <param name="body">HTTP Body</param>
@@ -510,9 +510,9 @@ namespace TeamControlium.NonGUI
         /// <summary>
         /// Performs an HTTP POST to the required Domain/ResourcePath containing given HTTP Header and Body
         /// </summary>
-        /// <param name="domain">Domain to POST to.  IE. <code>www.mytestsite.com</code></param>
-        /// <param name="resourcePath">Resource path at domain.  IE. <code>respource/path</code></param>
-        /// <param name="header">HTTP Header items, not including top line (IE. HTTP Method, resource, version</param>
+        /// <param name="domain">Domain to POST to.</param>
+        /// <param name="resourcePath">Resource path at domain.</param>
+        /// <param name="header">HTTP Header items, not including top line</param>
         /// <param name="body">HTTP Body</param>
         /// <param name="response">Processed HTTP Response if successful, null if not</param>
         /// <returns>True if success or false if not.  If successful exception thrown can be got from <see cref="TryException"/> </returns>
@@ -624,21 +624,21 @@ namespace TeamControlium.NonGUI
         /// <returns>Processed HTTP Response</returns>
         /// <remarks>
         /// <list type="table">
-        /// POST Parameters are obtained from properties.  Examples are based on an HTTP Post to <code>http://www.mypostexample.com/path/to/resource.wso?para1=data1#param1=data2</code>
+        /// POST Parameters are obtained from properties.  Examples are based on an HTTP Post to http://www.mypostexample.com/path/to/resource.wso?para1=data1#param1=data2
         /// <listheader>
         /// <term>Property</term><term>Example</term><term>Comments</term>
         /// </listheader>
         /// <item>
-        /// <term><see cref="Domain"/></term><term><code>www.mypostexample.com</code></term><term>Domain to Post to</term>
+        /// <term><see cref="Domain"/></term><term>www.mypostexample.com</term><term>Domain to Post to</term>
         /// </item>
         /// <item>
-        /// <term><see cref="ResourcePath"/></term><term><code>/path/to/resource.wso</code></term><term>Resource Path</term>
+        /// <term><see cref="ResourcePath"/></term><term>/path/to/resource.wso</term><term>Resource Path</term>
         /// </item>
         /// <item>
         /// <term><see cref="QueryString"/></term><term>para1=data1&amp;param1=data2</term><term>Query String</term>
         /// </item>
         /// <item>
-        /// <term><see cref="HeaderString"/></term><term><code>Accept: */*\r\nHost: www.mypostexample.com\r\nAccept-Encoding: identity\r\nConnection: close\r\n</code></term><term>Header items String</term>
+        /// <term><see cref="HeaderString"/></term><term>Accept: */*\r\nHost: www.mypostexample.com\r\nAccept-Encoding: identity\r\nConnection: close\r\n</term><term>Header items String</term>
         /// </item>
         /// <item>
         /// <term><see cref="Body"/></term><term>&lt;?xml version=\"1.0\"?&gt;&lt;s11:Env...oWords&gt;&lt;/s11:Body&gt;&lt;/s11:Envelope&gt;";</term><term>Body String</term>
@@ -860,21 +860,21 @@ namespace TeamControlium.NonGUI
         /// <returns>True if successful, false if not.  See <see cref="TryException"/> for exception in case of false.</returns>
         /// <remarks>
         /// <list type="table">
-        /// POST Parameters are obtained from properties.  Examples are based on an HTTP Post to <code>http://www.mypostexample.com/path/to/resource.wso?para1=data1#param1=data2</code>
+        /// POST Parameters are obtained from properties.  Examples are based on an HTTP Post to http://www.mypostexample.com/path/to/resource.wso?para1=data1#param1=data2
         /// <listheader>
         /// <term>Property</term><term>Example</term><term>Comments</term>
         /// </listheader>
         /// <item>
-        /// <term><see cref="Domain"/></term><term><code>www.mypostexample.com</code></term><term>Domain to Post to</term>
+        /// <term><see cref="Domain"/></term><term>www.mypostexample.com</term><term>Domain to Post to</term>
         /// </item>
         /// <item>
-        /// <term><see cref="ResourcePath"/></term><term><code>/path/to/resource.wso</code></term><term>Resource Path</term>
+        /// <term><see cref="ResourcePath"/></term><term>/path/to/resource.wso</term><term>Resource Path</term>
         /// </item>
         /// <item>
         /// <term><see cref="QueryString"/></term><term>para1=data1&amp;param1=data2</term><term>Query String</term>
         /// </item>
         /// <item>
-        /// <term><see cref="HeaderString"/></term><term><code>Accept: */*\r\nHost: www.mypostexample.com\r\nAccept-Encoding: identity\r\nConnection: close\r\n</code></term><term>Header items String</term>
+        /// <term><see cref="HeaderString"/></term><term>Accept: */*\r\nHost: www.mypostexample.com\r\nAccept-Encoding: identity\r\nConnection: close\r\n</term><term>Header items String</term>
         /// </item>
         /// <item>
         /// <term><see cref="Body"/></term><term>&lt;?xml version=\"1.0\"?&gt;&lt;s11:Env...oWords&gt;&lt;/s11:Body&gt;&lt;/s11:Envelope&gt;";</term><term>Body String</term>

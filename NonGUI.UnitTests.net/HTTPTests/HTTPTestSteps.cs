@@ -112,7 +112,7 @@ namespace TeamControlium.NonGUI.UnitTests
         /// A valid HTTP Header list is built with just Content-Type, Host, Accept-Encoding and Connection
         /// </summary>
         /// <remarks>
-        /// Content-Type set to text/xml, Host obtained from Specflow context "<code>Domain</code>", Accept-Encoding set to identity (IE. Clear text) and Connection set to close (
+        /// Content-Type set to text/xml, Host obtained from Specflow context "Domain", Accept-Encoding set to identity (IE. Clear text) and Connection set to close (
         /// </remarks>
         [Given(@"I build a valid minimal HTTP Header, as List, closing the connection after the response")]
         public void GivenIBuildAValidMinimalHTTPHeaderAsListClosingTheConnectionAfterTheResponse()
