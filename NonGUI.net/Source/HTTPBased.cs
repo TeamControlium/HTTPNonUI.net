@@ -188,22 +188,6 @@ namespace TeamControlium.NonGUI
         }
 
         /// <summary>
-        /// Gets or sets the HTTP Query list that is used on top line of HTTP Header
-        /// </summary>
-        public ItemList QueryList
-        {
-            get
-            {
-                return this.httpRequest.GetQueryAsList();
-            }
-
-            set
-            {
-                this.httpRequest.SetQueryParameters(value);
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the HTTP Query string that is used on top line of HTTP Header
         /// </summary>
         public string QueryString
@@ -216,22 +200,6 @@ namespace TeamControlium.NonGUI
             set
             {
                 this.httpRequest.SetQueryParameters(value);
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the HTTP Header as a List of name/value pairs
-        /// </summary>
-        public ItemList HeaderList
-        {
-            get
-            {
-                return this.httpRequest.GetHeaderAsList();
-            }
-
-            set
-            {
-                this.httpRequest.SetHeader(value);
             }
         }
 
@@ -755,11 +723,6 @@ namespace TeamControlium.NonGUI
                 throw new Exception($" HTTP {method}: Invalid Domain.  Expect xxx.xxx.xxx etc..  Have [{this.Domain}]");
             }
 
-            if (this.HeaderList.Any(kv => kv.Key.ToLower() == "connection") && this.HeaderList.Any(kv => kv.Key.ToLower() == "connection" && kv.Value == "keep-alive"))
-            {
-                LogWriteLine(LogLevels.TestDebug, $"Warning: HTTP {method} with HTTP Header containing a 'Connection: keep-alive'.  This will currently cause a timeout.  Only 'Connection: close' currently supported");
-            }
-
             this.HTTPMethod = method;
 
             string payLoad = this.httpRequest.ToString(setContentLength);
@@ -783,11 +746,6 @@ namespace TeamControlium.NonGUI
         {
             try
             {
-                if (this.HeaderList.Any(kv => kv.Key.ToLower() == "connection") && this.HeaderList.Any(kv => kv.Key.ToLower() == "connection" && kv.Value == "keep-alive"))
-                {
-                    LogWriteLine(LogLevels.TestDebug, "Warning: HTTP Post with HTTP Header containing a 'Connection: keep-alive'.  This will currently cause a timeout.  Only 'Connection: close' currently supported");
-                }
-
                 response = this.Http(method, setContentLength);
                 return true;
             }
@@ -977,11 +935,6 @@ namespace TeamControlium.NonGUI
                     throw new Exception($"Invalid Domain.  Expect xxx.xxx.xxx etc..  Have [{this.Domain}]");
                 }
 
-                if (this.HeaderList.Any(kv => kv.Key.ToLower() == "connection") && this.HeaderList.Any(kv => kv.Key.ToLower() == "connection" && kv.Value == "keep-alive"))
-                {
-                    LogWriteLine(LogLevels.TestDebug, "Warning: HTTP Post with HTTP Header containing a 'Connection: keep-alive'.  This will currently cause a timeout.  Only 'Connection: close' currently supported");
-                }
-
                 this.HTTPMethod = HTTPMethods.Post;
 
                 string payLoad = this.httpRequest.ToString(true);
@@ -995,6 +948,28 @@ namespace TeamControlium.NonGUI
                 response = null;
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Sets the Query-string used Item-List passed
+        /// </summary>
+        /// <param name="list">List of Name/Value items to set Query list to</param>
+        /// <remarks>Uses Repository data items (or defaults) for item and name/value delimiters<br/>
+        /// Overwrites any previously set Query list</remarks>
+        public void SetQueryStringFromItemList(ItemList list)
+        {
+            this.httpRequest.SetQueryParameters(list);
+        }
+
+        /// <summary>
+        /// Sets the header-string used Item-List passed
+        /// </summary>
+        /// <param name="list">List of Name/Value items to set Header list to</param>
+        /// <remarks>Uses Repository data items (or defaults) for item and name/value delimiters<br/>
+        /// Overwrites any previously set Header list</remarks>
+        public void SetHeaderStringFromItemList(ItemList list)
+        {
+            this.httpRequest.SetHeader(list);
         }
 
         /// <summary>

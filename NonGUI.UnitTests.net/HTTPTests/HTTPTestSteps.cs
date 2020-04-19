@@ -281,32 +281,24 @@ namespace TeamControlium.NonGUI.UnitTests
             {
                 if (this.context["Query"] is HTTPBased.ItemList)
                 {
-                    http.QueryList = (HTTPBased.ItemList)this.context["Query"];
+                    http.SetQueryStringFromItemList((HTTPBased.ItemList)this.context["Query"]);
                 }
                 else
                 {
                     http.QueryString = (string)this.context["Query"];
                 }
             }
-            else
-            {
-                http.QueryList = new HTTPBased.ItemList();
-            }
 
             if (this.context.ContainsKey("Header"))
             {
                 if (this.context["Header"] is HTTPBased.ItemList)
                 {
-                    http.HeaderList = (HTTPBased.ItemList)this.context["Header"];
+                    http.SetHeaderStringFromItemList((HTTPBased.ItemList)this.context["Header"]);
                 }
                 else
                 {
                     http.HeaderString = (string)this.context["Header"];
                 }
-            }
-            else
-            {
-                http.HeaderList = new HTTPBased.ItemList();
             }
 
             http.Body = this.context.ContainsKey("Payload") ? (string)this.context["Payload"] : null;
