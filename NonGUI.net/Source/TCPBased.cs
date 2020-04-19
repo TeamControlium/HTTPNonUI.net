@@ -22,7 +22,7 @@ namespace TeamControlium.NonGUI
         /// <summary>
         /// If transaction logging required, contains full path &amp; filename for logging of HTTP/TCP transactions.
         /// </summary>
-        private string transactionsLogFile = GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "TCP_TransactionsLogFile", null);
+        private string transactionsLogFile = GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "TCP_TransactionsLogFile", null);
 
         /// <summary>
         /// Gets or sets server certificate validation delegate Allowing external SSL (https://) server certificate checking and response.
@@ -37,20 +37,20 @@ namespace TeamControlium.NonGUI
         /// <summary>
         /// Maximum time, in milliseconds, to wait for a TCP Send to complete.  Default 10,000 (10 Seconds)
         /// </summary>
-        private int TCPSendTimeoutMilliseconds => GetItemLocalOrDefault<int>("TeamControlium.HTTPNonUI", "TCP_SendTimeoutMilliseconds", 10000);
+        private int TCPSendTimeoutMilliseconds => GetItemLocalOrDefault<int>("TeamControlium.NonGUI", "TCP_SendTimeoutMilliseconds", 10000);
 
         /// <summary>
         /// Maximum time, in milliseconds, to wait for a TCP Receive to complete.  Default 10,000 (10 Seconds)
         /// </summary>
         /// <remarks>Note that currently only Connections that are closed by the server after responding are supported.  Keep-alive connections
         /// where the Network Stream is not closed will result in Receive timeouts.</remarks>
-        private int TCPReceiveTimeoutMilliseconds => GetItemLocalOrDefault<int>("TeamControlium.HTTPNonUI", "TCP_ReceiveTimeoutMilliseconds", 10000);
+        private int TCPReceiveTimeoutMilliseconds => GetItemLocalOrDefault<int>("TeamControlium.NonGUI", "TCP_ReceiveTimeoutMilliseconds", 10000);
 
         /// <summary>
         /// When internal SSL (https://) server certificate checking is performed (actually it is NOT performed - it is mocked, no actual certificate check is done) this flag indicates
         /// acceptance or rejection.
         /// </summary>
-        private bool TCPAcceptSSLServerCertificate => GetItemLocalOrDefault<bool>("TeamControlium.HTTPNonUI", "SSL_AcceptServerCertificate", true);
+        private bool TCPAcceptSSLServerCertificate => GetItemLocalOrDefault<bool>("TeamControlium.NonGUI", "SSL_AcceptServerCertificate", true);
 
         /// <summary>
         /// Performs a single TCP send/receive and assumes server will close connection.
@@ -118,7 +118,7 @@ namespace TeamControlium.NonGUI
                 {
                     if (!string.IsNullOrEmpty(this.transactionsLogFile))
                     {
-                        General.WriteTextToFile(this.transactionsLogFile, General.WriteMode.Append, $"Sending using SSL ({sslProtocol.ToString()}). Certificate validation performed {(CertificateValidationCallback == null ? "Internally (Acceptance decided by Repository item [TeamControlium.HTTPNonUI,SSL_AcceptServerCertificate (default true)])" : "By delegate outside HTTPNonUI control")}\r\n");
+                        General.WriteTextToFile(this.transactionsLogFile, General.WriteMode.Append, $"Sending using SSL ({sslProtocol.ToString()}). Certificate validation performed {(CertificateValidationCallback == null ? "Internally (Acceptance decided by Repository item [TeamControlium.NonGUI,SSL_AcceptServerCertificate (default true)])" : "By delegate outside NonGUI control")}\r\n");
                     }
 
                     stream = (SslStream)new SslStream(tcpClient.GetStream(), false, validationCallback, null);
@@ -223,7 +223,7 @@ namespace TeamControlium.NonGUI
         {
             if (!string.IsNullOrEmpty(this.transactionsLogFile))
             {
-                General.WriteTextToFile(this.transactionsLogFile, General.WriteMode.Append, $"Server Certificate Validation (Subject: {certificate.Subject}, Issuer: {certificate.Issuer}]). {(this.TCPAcceptSSLServerCertificate ? "Accepting" : "Rejecting as Repository [TeamControlium.HTTPNonUI,SSL_AcceptServerCertificate] false")}\r\n");
+                General.WriteTextToFile(this.transactionsLogFile, General.WriteMode.Append, $"Server Certificate Validation (Subject: {certificate.Subject}, Issuer: {certificate.Issuer}]). {(this.TCPAcceptSSLServerCertificate ? "Accepting" : "Rejecting as Repository [TeamControlium.NonGUI,SSL_AcceptServerCertificate] false")}\r\n");
             }
 
             return this.TCPAcceptSSLServerCertificate;

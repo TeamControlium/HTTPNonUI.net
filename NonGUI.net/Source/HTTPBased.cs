@@ -35,7 +35,7 @@ namespace TeamControlium.NonGUI
         /// <summary>
         /// If transaction logging required, contains full path &amp; filename for logging of HTTP/TCP transactions.
         /// </summary>
-        private string transactionsLogFile = GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "TCP_TransactionsLogFile", null);
+        private string transactionsLogFile = GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "TCP_TransactionsLogFile", null);
 
         /// <summary>
         /// TCP object representing TCB layer of connection for TCP based interactions.
@@ -54,8 +54,8 @@ namespace TeamControlium.NonGUI
         {
             if (!string.IsNullOrEmpty(this.transactionsLogFile))
             {
-                General.WriteTextToFile(this.transactionsLogFile, General.WriteMode.Append, $"HTTPNonUI Instantiated at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}");
-                LogWriteLine(LogLevels.FrameworkInformation, $"Writing HTTPNonUI transactions to LogFile > {this.transactionsLogFile}");
+                General.WriteTextToFile(this.transactionsLogFile, General.WriteMode.Append, $"NonGUI Instantiated at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}");
+                LogWriteLine(LogLevels.FrameworkInformation, $"Writing NonGUI transactions to LogFile > {this.transactionsLogFile}");
             }
 
             this.UseSSL = false;
@@ -1169,19 +1169,19 @@ namespace TeamControlium.NonGUI
         /// <term>Category</term><term>Item</term><term>Type</term><term>Default Value</term><term>Comments</term>
         /// </listheader>
         /// <item>
-        /// <term>TeamControlium.HTTPNonUI</term><term>HTTPHeader_ItemDelimiter</term><term>string</term><term>:</term><term>Character(s) between Header title and value</term>
+        /// <term>TeamControlium.NonGUI</term><term>HTTPHeader_ItemDelimiter</term><term>string</term><term>:</term><term>Character(s) between Header title and value</term>
         /// </item>
         /// <item>
-        /// <term>TeamControlium.HTTPNonUI</term><term>HTTPHeader_SpaceAfterItemDelimiter</term><term>bool</term><term>true</term><term>Defines whether a space should follow the Header Item delimiter</term>
+        /// <term>TeamControlium.NonGUI</term><term>HTTPHeader_SpaceAfterItemDelimiter</term><term>bool</term><term>true</term><term>Defines whether a space should follow the Header Item delimiter</term>
         /// </item>
         /// <item>
-        /// <term>TeamControlium.HTTPNonUI</term><term>HTTPHeader_ItemsLineTerminator</term><term>string</term><term>\r\n</term><term>Character(s) at end of each header item (IE. Item delimiter in header)</term>
+        /// <term>TeamControlium.NonGUI</term><term>HTTPHeader_ItemsLineTerminator</term><term>string</term><term>\r\n</term><term>Character(s) at end of each header item (IE. Item delimiter in header)</term>
         /// </item>
         /// <item>
-        /// <term>TeamControlium.HTTPNonUI</term><term>HeaderItemText_ContentLength</term><term>string</term><term>Content-Length</term><term>Title of Header item determining content length.  Should always be Content-Length but tests can change this for negative testing if required.</term>
+        /// <term>TeamControlium.NonGUI</term><term>HeaderItemText_ContentLength</term><term>string</term><term>Content-Length</term><term>Title of Header item determining content length.  Should always be Content-Length but tests can change this for negative testing if required.</term>
         /// </item>
         /// <item>
-        /// <term>TeamControlium.HTTPNonUI</term><term>HeaderBodyDelimiter</term><term>string</term><term>\r\n</term><term>Character(s) delimiting between HTTP Header and Body. Should always be CRLF (Specification states a CRLF without preceding characters) but tests can change this for negative testing if required.</term>
+        /// <term>TeamControlium.NonGUI</term><term>HeaderBodyDelimiter</term><term>string</term><term>\r\n</term><term>Character(s) delimiting between HTTP Header and Body. Should always be CRLF (Specification states a CRLF without preceding characters) but tests can change this for negative testing if required.</term>
         /// </item>
         /// </list>
         /// </remarks>
@@ -1219,7 +1219,7 @@ namespace TeamControlium.NonGUI
             /// <param name="header">Header details of HTTP Request.</param>
             /// <param name="body">Body part of HTTP request to be sent</param>
             /// <remarks>
-            /// If header is null, repository data item [TeamControlium.HTTPNonUI,HTTPHeader] is checked for and used if set.  See <see cref="HeaderDefault"/>
+            /// If header is null, repository data item [TeamControlium.NonGUI,HTTPHeader] is checked for and used if set.  See <see cref="HeaderDefault"/>
             /// </remarks>
             public FullHTTPRequest(string? header, string? body)
             {
@@ -1239,7 +1239,7 @@ namespace TeamControlium.NonGUI
             /// <param name="header">Header details of HTTP Request.</param>
             /// <param name="body">Body part of HTTP request to be sent</param>
             /// <remarks>
-            /// If header is null, repository data item [TeamControlium.HTTPNonUI,HTTPHeader] is checked for and used if set.  See <see cref="HeaderDefault"/>.
+            /// If header is null, repository data item [TeamControlium.NonGUI,HTTPHeader] is checked for and used if set.  See <see cref="HeaderDefault"/>.
             /// It is the caller's responsibility to ensure header top line is NOT part of the header string as this will result in it being used twice!
             /// </remarks>
             public FullHTTPRequest(HTTPMethods httpMethod, string resourcePath, string queryParameters, string? header, string? body)
@@ -1260,7 +1260,7 @@ namespace TeamControlium.NonGUI
             /// <param name="header">Header items to be used in request. List is unwrapped and converted to string.</param>
             /// <param name="body">Body part of HTTP request to be sent</param>
             /// <remarks>
-            /// If header is null, repository data item [TeamControlium.HTTPNonUI,HTTPHeader] is checked for and used if set.  See <see cref="HeaderDefault"/>.
+            /// If header is null, repository data item [TeamControlium.NonGUI,HTTPHeader] is checked for and used if set.  See <see cref="HeaderDefault"/>.
             /// It is the caller's responsibility to ensure header top line is NOT part of the header string as this will result in it being used twice!
             /// Note.  Aspects of the query string (delimiters etc) can be modified using Repository data items.  See <see cref="FullHTTPRequest"/> documentation for details.
             /// </remarks>
@@ -1282,7 +1282,7 @@ namespace TeamControlium.NonGUI
             /// <param name="header">Header details of HTTP Request.</param>
             /// <param name="body">Body part of HTTP request to be sent</param>
             /// <remarks>
-            /// If header is null, repository data item [TeamControlium.HTTPNonUI,HTTPHeader] is checked for and used if set.  See <see cref="HeaderDefault"/>.
+            /// If header is null, repository data item [TeamControlium.NonGUI,HTTPHeader] is checked for and used if set.  See <see cref="HeaderDefault"/>.
             /// It is the caller's responsibility to ensure header top line is NOT part of the header string as this will result in it being used twice!
             /// Note.  Aspects of the query string (delimiters etc) can be modified using Repository data items.  See <see cref="FullHTTPRequest"/> documentation for details.
             /// </remarks>
@@ -1304,7 +1304,7 @@ namespace TeamControlium.NonGUI
             /// <param name="header">Header items to be used in request. List is unwrapped and converted to string.</param>
             /// <param name="body">Body part of HTTP request to be sent</param>
             /// <remarks>
-            /// If header is null, repository data item [TeamControlium.HTTPNonUI,HTTPHeader] is checked for and used if set.  See <see cref="HeaderDefault"/>.
+            /// If header is null, repository data item [TeamControlium.NonGUI,HTTPHeader] is checked for and used if set.  See <see cref="HeaderDefault"/>.
             /// It is the caller's responsibility to ensure header top line is NOT part of the header string as this will result in it being used twice!
             /// Note.  Aspects of the query string (delimiters etc) can be modified using Repository data items.  See <see cref="FullHTTPRequest"/> documentation for details.
             /// </remarks>
@@ -1347,68 +1347,68 @@ namespace TeamControlium.NonGUI
             /// <summary>
             /// Separator between URL Resource Path and Query string.  Should be ?
             /// </summary>
-            public string HttpURLQuerySeparator => GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "HTTPURL_QuerySeparator", "?");
+            public string HttpURLQuerySeparator => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPURL_QuerySeparator", "?");
 
             /// <summary>
             /// Separator between query items in URL.  Should be &amp;
             /// </summary>
-            public string HttpURLQueryParameterSeparator => GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "HTTPURL_ParameterSeparator", "&");
+            public string HttpURLQueryParameterSeparator => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPURL_ParameterSeparator", "&");
 
             /// <summary>
             /// Separator between name and value of each query parameter.  Should be =
             /// </summary>
-            public string HttpURLQueryParameterNameValueSeparator => GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "HTTPURL_ParameterNameValueSeparator", "=");
+            public string HttpURLQueryParameterNameValueSeparator => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPURL_ParameterNameValueSeparator", "=");
 
             /// <summary>
             /// First Text in an HTTP request to denote an HTTP POST Method.  Should be POST
             /// </summary>
-            public string HttpTypePostText => GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "HTTPHeader_PostText", "POST");
+            public string HttpTypePostText => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPHeader_PostText", "POST");
 
             /// <summary>
             /// First Text in an HTTP request to denote an HTTP GET Method.  Should be GET
             /// </summary>
-            public string HttpTypeGetText => GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "HTTPHeader_PostText", "GET");
+            public string HttpTypeGetText => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPHeader_PostText", "GET");
 
             /// <summary>
             /// Text in HTTP request top line to indicate HTTP version document is compliant with.  Should be HTTP/1.1
             /// </summary>
-            public string HttpVersion => GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "HTTPHeader_Version", "HTTP/1.1");
+            public string HttpVersion => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPHeader_Version", "HTTP/1.1");
 
             /// <summary>
             /// Name/Value delimiter for HPP Request header items.  Should be :
             /// </summary>
-            public string HeaderItemDelimiter => GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "HTTPHeader_ItemDelimiter", ":");
+            public string HeaderItemDelimiter => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPHeader_ItemDelimiter", ":");
 
             /// <summary>
             /// Flag indicates if a space character should follow <see cref="HeaderItemDelimiter"/>.  Should be true
             /// </summary>
-            public bool SpaceAfterHeaderItemDelimiter => GetItemLocalOrDefault<bool>("TeamControlium.HTTPNonUI", "HTTPHeader_SpaceAfterItemDelimiter", true);
+            public bool SpaceAfterHeaderItemDelimiter => GetItemLocalOrDefault<bool>("TeamControlium.NonGUI", "HTTPHeader_SpaceAfterItemDelimiter", true);
 
             /// <summary>
             /// HTTP Request header line termination characters.  Should be \r\n
             /// </summary>
-            public string HeaderItemLineTerminator => GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "HTTPHeader_ItemsLineTerminator", "\r\n");
+            public string HeaderItemLineTerminator => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPHeader_ItemsLineTerminator", "\r\n");
 
             /// <summary>
             /// Text to use for HTTP Header Content Length item.  Should be Content-Length
             /// </summary>
-            public string HeaderContentLengthTitle => GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "HeaderItemText_ContentLength", "Content-Length");
+            public string HeaderContentLengthTitle => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HeaderItemText_ContentLength", "Content-Length");
 
             /// <summary>
             /// Delimiter between HTTP Request header items and the body.  Specification states this must be a CRLF with no preceding characters  
             /// </summary>
-            public string HeaderBodyDelimiter => GetItemLocalOrDefault<string>("TeamControlium.HTTPNonUI", "HeaderBodyDelimiter", "\r\n");
+            public string HeaderBodyDelimiter => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HeaderBodyDelimiter", "\r\n");
 
             /// <summary>
             /// Gets Header from Repository data. If null Header is passed in to a call (or a public Web method with no option to set a Header is used), this property is used.  Property is populated from
-            /// the local Repository item [TeamControlium.HTTPNonUI,HTTPHeader] which can be a string or List&lt;KeyValuePair&lt;string, string&gt;&gt;.  If this has not been set an empty
-            /// header is used.  If Repository item [TeamControlium.HTTPNonUI,HTTPHeader] contains a type NOT string or List&lt;KeyValuePair&lt;string, string&gt;&gt; an exception is thrown.
+            /// the local Repository item [TeamControlium.NonGUI,HTTPHeader] which can be a string or List&lt;KeyValuePair&lt;string, string&gt;&gt;.  If this has not been set an empty
+            /// header is used.  If Repository item [TeamControlium.NonGUI,HTTPHeader] contains a type NOT string or List&lt;KeyValuePair&lt;string, string&gt;&gt; an exception is thrown.
             /// </summary>
             private dynamic HeaderDefault
             {
                 get
                 {
-                    dynamic head = GetItemLocalOrDefault("TeamControlium.HTTPNonUI", "HTTPHeader", new ItemList());
+                    dynamic head = GetItemLocalOrDefault("TeamControlium.NonGUI", "HTTPHeader", new ItemList());
                  
                     if (head is string)
                     {
@@ -1420,15 +1420,15 @@ namespace TeamControlium.NonGUI
                     }
                     else
                     {
-                        throw new Exception("Local repository [TeamControlium.HTTPNonUI,HTTPHeader] not stored as ItemList or string.  Cannot use!");
+                        throw new Exception("Local repository [TeamControlium.NonGUI,HTTPHeader] not stored as ItemList or string.  Cannot use!");
                     }
                 }
             }
 
             /// <summary>
             /// Gets Query string from Repository. If null Query Parameters is passed in to a call (or a public Web method with no option to set a Header is used), this property is used.  Property is populated from
-            /// the local Repository item [TeamControlium.HTTPNonUI,HTTPQuery] which can be a string or List&lt;KeyValuePair&lt;string, string&gt;&gt;.  If this has not been set an empty
-            /// header is used.  If Repository item [TeamControlium.HTTPNonUI,HTTPQuery] contains a type NOT string or List&lt;KeyValuePair&lt;string, string&gt;&gt; an exception is thrown. If populated,
+            /// the local Repository item [TeamControlium.NonGUI,HTTPQuery] which can be a string or List&lt;KeyValuePair&lt;string, string&gt;&gt;.  If this has not been set an empty
+            /// header is used.  If Repository item [TeamControlium.NonGUI,HTTPQuery] contains a type NOT string or List&lt;KeyValuePair&lt;string, string&gt;&gt; an exception is thrown. If populated,
             /// the query part of the URL Resource Path is populated IRRELEVANT of the HTTP Method used - this is to ensure testing (and negative testing ) is possible.  It is the
             /// responsibility of the test code to ensure correct state of the Query string.
             /// </summary>
@@ -1436,7 +1436,7 @@ namespace TeamControlium.NonGUI
             {
                 get
                 {
-                    dynamic param = GetItemLocalOrDefault("TeamControlium.HTTPNonUI", "HTTPQuery", new ItemList());
+                    dynamic param = GetItemLocalOrDefault("TeamControlium.NonGUI", "HTTPQuery", new ItemList());
 
                     if (param is string)
                     {
@@ -1448,7 +1448,7 @@ namespace TeamControlium.NonGUI
                     }
                     else
                     {
-                        throw new Exception("Local repository [TeamControlium.HTTPNonUI,HTTPQuery] not stored as ItemList or string.  Cannot use!");
+                        throw new Exception("Local repository [TeamControlium.NonGUI,HTTPQuery] not stored as ItemList or string.  Cannot use!");
                     }
                 }
             }
