@@ -10,6 +10,10 @@ Library is available on NuGet (TeamControlium NonGUI).
 
 [Full API documentation](https://teamcontrolium.github.io/NonGUI.net)
 
+### Examples
+
+Examples of usage can be seen in the [NonGUI.net.Examples](https://github.com/TeamControlium/NonGUI.Net.Examples) project
+
 ### Dependencies
 
 .Net Core 3.1
