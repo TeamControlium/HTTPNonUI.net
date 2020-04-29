@@ -12,6 +12,9 @@
       <Value>int</Value>
       <Value>mypostexample</Value>
       <Value>wso</Value>
+      <Value>Filestring</Value>
+      <Value>Ssl</Value>
+      <Value>Tls</Value>
     </CollectionProperty>
     <StringProperty Name="MergeSettingsFiles">NoMerge</StringProperty>
     <StringProperty Name="Culture">en-GB</StringProperty>

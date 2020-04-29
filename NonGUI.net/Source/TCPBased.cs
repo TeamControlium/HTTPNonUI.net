@@ -225,7 +225,7 @@ namespace TeamControlium.NonGUI
             {
                 General.WriteTextToFile(this.transactionsLogFile, General.WriteMode.Append, $"Server Certificate Validation (Subject: {certificate.Subject}, Issuer: {certificate.Issuer}]). {(this.TCPAcceptSSLServerCertificate ? "Accepting" : "Rejecting as Repository [TeamControlium.NonGUI,SSL_AcceptServerCertificate] false")}\r\n");
             }
-
+            
             return this.TCPAcceptSSLServerCertificate;
         }
     }

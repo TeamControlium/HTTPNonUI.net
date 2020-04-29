@@ -1,85 +1,91 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <HelpTOC>
 
-  <HelpTOCNode Id="894eb84d-8fd6-4d48-b60e-68f8fd0446e8" Title="TeamControlium" Url="html/b39c324c-c037-2c99-0609-ba08961e7d87.htm">
-    <HelpTOCNode Id="f51a3c1f-0c38-4f34-b990-dd4b3bbab833" Title="InvalidHTTPResponse Class" Url="html/f1912526-3817-42bc-3968-5029637ee35c.htm">
-      <HelpTOCNode Id="ef389d09-4710-4340-8a8f-ed4f7f00ede3" Title="InvalidHTTPResponse Constructor " Url="html/25eb63ad-5c72-7871-7b38-e018267904c3.htm">
-        <HelpTOCNode Title="InvalidHTTPResponse Constructor (String, Object[])" Url="html/de12b7df-120c-d191-16bb-1b2f6e46b0f5.htm" />
-        <HelpTOCNode Title="InvalidHTTPResponse Constructor (String, Exception, Object[])" Url="html/042adacf-faef-26e7-11a7-a4b5aa01bd0e.htm" />
-      </HelpTOCNode>
-      <HelpTOCNode Title="InvalidHTTPResponse Properties" Url="html/f501b1d6-c7db-dcd1-c9b0-0ed29051a8e3.htm" />
-      <HelpTOCNode Title="InvalidHTTPResponse Methods" Url="html/d1dd7031-0ef0-3285-365a-ad35ea35adc3.htm" />
-    </HelpTOCNode>
-  </HelpTOCNode>
-  <HelpTOCNode Id="f17c1235-dc45-423d-ae1e-850aa3ee2f13" Title="TeamControlium.NonGUI" Url="html/7c8197c9-2a4b-3073-068f-4bdf12fc0e2c.htm">
-    <HelpTOCNode Id="86b9e729-3d89-4cac-a190-dd6bb9f3b1ff" Title="HTTPBased Class" Url="html/72120597-6fa2-1437-26de-f3477e705880.htm">
-      <HelpTOCNode Title="HTTPBased Constructor " Url="html/d3f0c93b-43af-0dda-80c4-187ce37ce149.htm" />
-      <HelpTOCNode Id="e83582fe-a203-4b42-a88b-c1a6f174f3cf" Title="HTTPBased Properties" Url="html/fdcb1f72-8d09-33b5-8fd4-6482e137630c.htm">
-        <HelpTOCNode Title="Body Property " Url="html/e425ac4a-bf04-37e5-c7ad-826a7bc430d0.htm" />
-        <HelpTOCNode Title="CertificateValidationCallback Property " Url="html/ac3d03ec-d19e-ae0b-aa11-cdc050cf862e.htm" />
-        <HelpTOCNode Title="ClientCertificate Property " Url="html/6aa7754d-529a-95d4-fff7-c216bbab2fba.htm" />
-        <HelpTOCNode Title="Domain Property " Url="html/88bd5771-6635-05d4-be61-21d1ba4be709.htm" />
-        <HelpTOCNode Title="HeaderString Property " Url="html/a33ca7f1-3bda-8c69-2c32-2184e504188e.htm" />
-        <HelpTOCNode Title="HTTPMethod Property " Url="html/efbf28f1-ae37-87b3-5f2d-0c1dbb64fbe6.htm" />
-        <HelpTOCNode Title="QueryString Property " Url="html/a7407ba4-a6f3-84ed-2d82-9b542afa60c9.htm" />
-        <HelpTOCNode Title="ResourcePath Property " Url="html/0f62953d-bf06-1f4a-2e51-0ac2d63ec4f1.htm" />
-        <HelpTOCNode Title="ResponseRaw Property " Url="html/e621def1-0ad6-aff1-eb25-919c199a8510.htm" />
-        <HelpTOCNode Title="TryException Property " Url="html/c2aa26e8-6675-354f-96ac-b4cc159dadbb.htm" />
-        <HelpTOCNode Title="UseSSL Property " Url="html/d14cf777-3d9e-b12f-3de5-b17a9e81965e.htm" />
-      </HelpTOCNode>
-      <HelpTOCNode Id="2f6ec4e9-add8-4ceb-a71f-7885c2025f9f" Title="HTTPBased Methods" Url="html/c033031f-2277-0002-3904-8f274577b9f7.htm">
-        <HelpTOCNode Id="722005c5-b0e9-4999-a47d-cc9f4546dc6e" Title="Http Method " Url="html/b6d03491-82f2-2ac2-1701-459ac9669892.htm">
-          <HelpTOCNode Title="Http Method (HTTPBased.HTTPMethods, Boolean)" Url="html/63220475-8514-cd76-0d3d-ab6ea9e74d20.htm" />
-          <HelpTOCNode Title="Http Method (HTTPBased.HTTPMethods, String, String, String, String, String, Boolean)" Url="html/83386e0d-b912-f16f-daaa-2c4b8c7ccb4a.htm" />
+  <HelpTOCNode Id="a3aa93b6-3161-49c8-ac07-a1c96c88a6ca" Title="TeamControlium Namespaces" Url="html/af0b5521-bd52-b44b-40f3-bee5e2a92e80.htm">
+    <HelpTOCNode Id="4594ba10-640f-4377-b212-ccaa49f51fd3" Title="TeamControlium" Url="html/b39c324c-c037-2c99-0609-ba08961e7d87.htm">
+      <HelpTOCNode Id="bca916ba-25da-46e2-b580-e1da659fe587" Title="InvalidHTTPResponse Class" Url="html/f1912526-3817-42bc-3968-5029637ee35c.htm">
+        <HelpTOCNode Id="443eb10c-23c6-412e-aa5f-3ce80b48e694" Title="InvalidHTTPResponse Constructor " Url="html/25eb63ad-5c72-7871-7b38-e018267904c3.htm">
+          <HelpTOCNode Title="InvalidHTTPResponse Constructor (String, Object[])" Url="html/de12b7df-120c-d191-16bb-1b2f6e46b0f5.htm" />
+          <HelpTOCNode Title="InvalidHTTPResponse Constructor (String, Exception, Object[])" Url="html/042adacf-faef-26e7-11a7-a4b5aa01bd0e.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Id="4056a04a-a9c8-4261-9e7b-df5a824cae78" Title="HttpGET Method " Url="html/b986b6b3-cf11-d15e-34e8-e0249ff158c0.htm">
-          <HelpTOCNode Title="HttpGET Method " Url="html/1d960aa9-6104-6979-9e14-ebbb5b8b24ab.htm" />
-          <HelpTOCNode Title="HttpGET Method (String, String, String, String, String)" Url="html/ff82a110-5312-edf1-cdd2-0225d3f690e8.htm" />
-        </HelpTOCNode>
-        <HelpTOCNode Id="97198d9d-3a06-4f0e-8150-d7b5fcb473bc" Title="HttpPOST Method " Url="html/81af63c9-3169-e8c8-19f7-9fc82fd9d500.htm">
-          <HelpTOCNode Title="HttpPOST Method " Url="html/b97eb775-69d3-9597-1c5c-145dfe3dc422.htm" />
-          <HelpTOCNode Title="HttpPOST Method (String, String, String, String, String)" Url="html/c8d3a3d5-b43f-84c9-03d3-8b0d6ab60f11.htm" />
-        </HelpTOCNode>
-        <HelpTOCNode Title="SetHeaderStringFromItemList Method " Url="html/85fbde67-833e-b5f2-f1ad-fec975200fab.htm" />
-        <HelpTOCNode Title="SetQueryStringFromItemList Method " Url="html/b8978e70-7dc5-8c60-d75b-8e04e4a0b781.htm" />
-        <HelpTOCNode Id="1fe0652e-f593-4606-8d42-0f356c1cd50e" Title="TryHttp Method " Url="html/d8cde2a2-7a1d-91ac-94cd-62212e3fefe5.htm">
-          <HelpTOCNode Title="TryHttp Method (HTTPBased.HTTPMethods, HTTPBased.ItemList, Boolean)" Url="html/21b03e0b-49e0-1f4c-a9b9-45842d088e53.htm" />
-          <HelpTOCNode Title="TryHttp Method (HTTPBased.HTTPMethods, String, String, String, String, String, HTTPBased.ItemList, Boolean)" Url="html/82a439e6-31aa-747f-2acc-afda372a05ef.htm" />
-        </HelpTOCNode>
-        <HelpTOCNode Id="b0704cf7-7c1f-4f67-a76e-3ddb3431a758" Title="TryHttpPOST Method " Url="html/3846400b-3c11-7a5f-ccd8-fe622a04e949.htm">
-          <HelpTOCNode Title="TryHttpPOST Method (HTTPBased.ItemList)" Url="html/b823350e-0bdf-5f87-34ad-9eb88f07fee1.htm" />
-          <HelpTOCNode Title="TryHttpPOST Method (String, String, String, String, HTTPBased.ItemList)" Url="html/98eb9146-341b-108e-1420-9a9829593e22.htm" />
-        </HelpTOCNode>
+        <HelpTOCNode Title="InvalidHTTPResponse Properties" Url="html/f501b1d6-c7db-dcd1-c9b0-0ed29051a8e3.htm" />
+        <HelpTOCNode Title="InvalidHTTPResponse Methods" Url="html/d1dd7031-0ef0-3285-365a-ad35ea35adc3.htm" />
       </HelpTOCNode>
     </HelpTOCNode>
-    <HelpTOCNode Title="HTTPBased.HTTPMethods Enumeration" Url="html/288c4a9d-ba93-2792-d988-3a7d20c8e7a3.htm" />
-    <HelpTOCNode Id="d5064095-aa76-4b03-8e6b-419d7a9e6c45" Title="HTTPBased.ItemList Class" Url="html/7d03ba9a-865f-5f56-6af4-b72569bae49a.htm">
-      <HelpTOCNode Id="6912e431-f955-4a0d-bd5b-57db9f3ec1dd" Title="ItemList Constructor " Url="html/bb06f461-618b-2c83-53d7-ca19253331a0.htm">
-        <HelpTOCNode Title="HTTPBased.ItemList Constructor " Url="html/cb0c300d-be11-efb5-1c74-50730b9d0a76.htm" />
-        <HelpTOCNode Title="HTTPBased.ItemList Constructor (List(KeyValuePair(String, String)))" Url="html/a215925a-6491-ee2f-e029-6420db4a3570.htm" />
-      </HelpTOCNode>
-      <HelpTOCNode Id="a8551d7a-0b20-4f73-ad4f-414f73d5cd1c" Title="ItemList Properties" Url="html/cee7a94b-dde2-cd60-13c0-8a7e05d7c38b.htm">
-        <HelpTOCNode Id="dd925e5b-656a-494f-b220-b5abb77993c4" Title="Item Property " Url="html/7bbc881b-308d-4cd3-5654-24e58918ddc9.htm">
-          <HelpTOCNode Title="Item Property (String)" Url="html/317dca20-a9d7-5e0e-4ecb-9aa2346ff659.htm" />
+    <HelpTOCNode Id="2c74c617-9873-409e-860d-9415871782ec" Title="TeamControlium.NonGUI" Url="html/7c8197c9-2a4b-3073-068f-4bdf12fc0e2c.htm">
+      <HelpTOCNode Id="efff4725-5d04-4c4e-a21e-5372d5c69227" Title="HTTPBased Class" Url="html/72120597-6fa2-1437-26de-f3477e705880.htm">
+        <HelpTOCNode Title="HTTPBased Constructor " Url="html/d3f0c93b-43af-0dda-80c4-187ce37ce149.htm" />
+        <HelpTOCNode Id="95f17942-967a-46a1-aa4f-95e660d5540c" Title="HTTPBased Properties" Url="html/fdcb1f72-8d09-33b5-8fd4-6482e137630c.htm">
+          <HelpTOCNode Title="ActualPayload Property " Url="html/1068202d-ba1e-c591-78a7-f39dc59864b3.htm" />
+          <HelpTOCNode Title="ActualRawResponse Property " Url="html/159c1c0e-d6d6-8dc2-9fb7-2b577d6266c9.htm" />
+          <HelpTOCNode Title="ActualURL Property " Url="html/e8d6a5ff-876f-1133-3f49-75728be65387.htm" />
+          <HelpTOCNode Title="Body Property " Url="html/e425ac4a-bf04-37e5-c7ad-826a7bc430d0.htm" />
+          <HelpTOCNode Title="Certificate Property " Url="html/f92f2214-09b4-24d2-ecf5-2e46f6432752.htm" />
+          <HelpTOCNode Title="CertificateFilename Property " Url="html/3ec11ce0-a660-77f3-efc6-56b8638c5c06.htm" />
+          <HelpTOCNode Title="CertificatePassword Property " Url="html/2149fae5-ac58-7369-2307-f9631e17a6b4.htm" />
+          <HelpTOCNode Title="CertificateValidationCallback Property " Url="html/ac3d03ec-d19e-ae0b-aa11-cdc050cf862e.htm" />
+          <HelpTOCNode Title="ClientCertificate Property " Url="html/6aa7754d-529a-95d4-fff7-c216bbab2fba.htm" />
+          <HelpTOCNode Title="Domain Property " Url="html/88bd5771-6635-05d4-be61-21d1ba4be709.htm" />
+          <HelpTOCNode Title="HeaderString Property " Url="html/a33ca7f1-3bda-8c69-2c32-2184e504188e.htm" />
+          <HelpTOCNode Title="HTTPMethod Property " Url="html/efbf28f1-ae37-87b3-5f2d-0c1dbb64fbe6.htm" />
+          <HelpTOCNode Title="HTTPPort Property " Url="html/194c4398-1b4f-cd0d-70a4-22e7c72fb05b.htm" />
+          <HelpTOCNode Title="QueryString Property " Url="html/a7407ba4-a6f3-84ed-2d82-9b542afa60c9.htm" />
+          <HelpTOCNode Title="ResourcePath Property " Url="html/0f62953d-bf06-1f4a-2e51-0ac2d63ec4f1.htm" />
+          <HelpTOCNode Title="ResponseRaw Property " Url="html/e621def1-0ad6-aff1-eb25-919c199a8510.htm" />
+          <HelpTOCNode Title="SSLPort Property " Url="html/67b89e15-ea9b-d3e4-362a-b9cbae910de8.htm" />
+          <HelpTOCNode Title="SSLProtocol Property " Url="html/38b9f5bb-6288-ee1f-d15e-d713e27467da.htm" />
+          <HelpTOCNode Title="TransactionsLogFile Property " Url="html/15053a72-12b8-de23-8523-cc25f94f466e.htm" />
+          <HelpTOCNode Title="TryException Property " Url="html/c2aa26e8-6675-354f-96ac-b4cc159dadbb.htm" />
+          <HelpTOCNode Title="UseSSL Property " Url="html/d14cf777-3d9e-b12f-3de5-b17a9e81965e.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="1deda1ed-b5d4-43a9-93b9-8563b17796fc" Title="HTTPBased Methods" Url="html/c033031f-2277-0002-3904-8f274577b9f7.htm">
+          <HelpTOCNode Id="c4f4d307-3b8a-4a77-af15-599bd7393bca" Title="Http Method " Url="html/b6d03491-82f2-2ac2-1701-459ac9669892.htm">
+            <HelpTOCNode Title="Http Method (Boolean)" Url="html/24ec9d4d-bd0d-ddb2-f7e4-690eac483015.htm" />
+            <HelpTOCNode Title="Http Method (HTTPBased.HTTPMethods, String, String, String, String, String, Boolean)" Url="html/83386e0d-b912-f16f-daaa-2c4b8c7ccb4a.htm" />
+          </HelpTOCNode>
+          <HelpTOCNode Title="HttpGET Method " Url="html/ff82a110-5312-edf1-cdd2-0225d3f690e8.htm" />
+          <HelpTOCNode Title="HttpPOST Method " Url="html/c8d3a3d5-b43f-84c9-03d3-8b0d6ab60f11.htm" />
+          <HelpTOCNode Title="SetHeaderStringFromItemList Method " Url="html/85fbde67-833e-b5f2-f1ad-fec975200fab.htm" />
+          <HelpTOCNode Title="SetQueryStringFromItemList Method " Url="html/b8978e70-7dc5-8c60-d75b-8e04e4a0b781.htm" />
+          <HelpTOCNode Id="ff12e38f-bc04-4c7a-a945-6f53d8df6d5e" Title="TryHttp Method " Url="html/d8cde2a2-7a1d-91ac-94cd-62212e3fefe5.htm">
+            <HelpTOCNode Title="TryHttp Method (HTTPBased.ItemList, Boolean)" Url="html/c3d0feb4-2508-f46f-c5f2-5702f187ce02.htm" />
+            <HelpTOCNode Title="TryHttp Method (HTTPBased.HTTPMethods, String, String, String, String, String, HTTPBased.ItemList, Boolean)" Url="html/82a439e6-31aa-747f-2acc-afda372a05ef.htm" />
+          </HelpTOCNode>
+          <HelpTOCNode Id="e367c52f-b892-4a8a-9b2b-89a3d0475f1c" Title="TryHttpPOST Method " Url="html/3846400b-3c11-7a5f-ccd8-fe622a04e949.htm">
+            <HelpTOCNode Title="TryHttpPOST Method (HTTPBased.ItemList)" Url="html/b823350e-0bdf-5f87-34ad-9eb88f07fee1.htm" />
+            <HelpTOCNode Title="TryHttpPOST Method (String, String, String, String, HTTPBased.ItemList)" Url="html/98eb9146-341b-108e-1420-9a9829593e22.htm" />
+          </HelpTOCNode>
         </HelpTOCNode>
       </HelpTOCNode>
-      <HelpTOCNode Id="de97e629-8ac4-4d3d-a504-982474319d8a" Title="ItemList Methods" Url="html/b6d4543d-28b5-fa3f-2bab-582cb5ed7d15.htm">
-        <HelpTOCNode Id="0d2f5b68-781a-4709-b28a-8edf0c67400a" Title="Add Method " Url="html/2deb9dae-9598-46b6-3ecc-b7735f7d09a7.htm">
-          <HelpTOCNode Title="Add Method (String, String)" Url="html/e8b56590-6eef-16ce-e7a5-fcd4f0fb9574.htm" />
+      <HelpTOCNode Title="HTTPBased.HTTPMethods Enumeration" Url="html/288c4a9d-ba93-2792-d988-3a7d20c8e7a3.htm" />
+      <HelpTOCNode Id="7ca8a919-103d-4e0b-80b3-3aec61e6451c" Title="HTTPBased.ItemList Class" Url="html/7d03ba9a-865f-5f56-6af4-b72569bae49a.htm">
+        <HelpTOCNode Id="48d585d5-f7d7-401e-a030-bfe853f93e71" Title="ItemList Constructor " Url="html/bb06f461-618b-2c83-53d7-ca19253331a0.htm">
+          <HelpTOCNode Title="HTTPBased.ItemList Constructor " Url="html/cb0c300d-be11-efb5-1c74-50730b9d0a76.htm" />
+          <HelpTOCNode Title="HTTPBased.ItemList Constructor (List(KeyValuePair(String, String)))" Url="html/a215925a-6491-ee2f-e029-6420db4a3570.htm" />
         </HelpTOCNode>
-        <HelpTOCNode Title="ContainsKey Method " Url="html/425fc062-7beb-39e1-e1cf-3f2dae4b9f1a.htm" />
+        <HelpTOCNode Id="89037882-f47c-440d-b6ba-9bb0723f20bc" Title="ItemList Properties" Url="html/cee7a94b-dde2-cd60-13c0-8a7e05d7c38b.htm">
+          <HelpTOCNode Id="347e0e33-886a-4611-b4e2-46511f9dda99" Title="Item Property " Url="html/7bbc881b-308d-4cd3-5654-24e58918ddc9.htm">
+            <HelpTOCNode Title="Item Property (String)" Url="html/317dca20-a9d7-5e0e-4ecb-9aa2346ff659.htm" />
+          </HelpTOCNode>
+        </HelpTOCNode>
+        <HelpTOCNode Id="fd0e2f90-5f36-4af3-8582-822ded58da64" Title="ItemList Methods" Url="html/b6d4543d-28b5-fa3f-2bab-582cb5ed7d15.htm">
+          <HelpTOCNode Id="ab46427c-fd1f-42ce-bf19-fa6d4652e451" Title="Add Method " Url="html/2deb9dae-9598-46b6-3ecc-b7735f7d09a7.htm">
+            <HelpTOCNode Title="Add Method (String, String)" Url="html/e8b56590-6eef-16ce-e7a5-fcd4f0fb9574.htm" />
+          </HelpTOCNode>
+          <HelpTOCNode Title="ContainsKey Method " Url="html/425fc062-7beb-39e1-e1cf-3f2dae4b9f1a.htm" />
+        </HelpTOCNode>
       </HelpTOCNode>
-    </HelpTOCNode>
-    <HelpTOCNode Id="0ea5027b-6056-4fde-b4f3-a5472933881d" Title="TCPBased Class" Url="html/fb857cb7-bc1f-e2c6-920f-35db79b9646f.htm">
-      <HelpTOCNode Title="TCPBased Constructor " Url="html/bd2422d3-8fc6-5a49-8139-f2eebc6e94e9.htm" />
-      <HelpTOCNode Id="cfba3da7-6c67-46e7-88c1-d4849128fcac" Title="TCPBased Properties" Url="html/2b1df6c5-b7b5-ff22-22f2-a17497b3d972.htm">
-        <HelpTOCNode Title="CertificateValidationCallback Property " Url="html/a74fd353-681c-ad03-7120-487d2d5a423d.htm" />
-        <HelpTOCNode Title="ClientCertificate Property " Url="html/02266209-1383-1066-c210-72b6c1ebaa3e.htm" />
-      </HelpTOCNode>
-      <HelpTOCNode Id="60cd58f3-75f8-4c1d-aefb-c714e190903d" Title="TCPBased Methods" Url="html/18c04b2e-0eae-54d6-cc59-a7847294ef1d.htm">
-        <HelpTOCNode Id="3da2b31f-d041-4359-bd91-4673a0875f2e" Title="DoTCPRequest Method " Url="html/82d775c2-0c8e-ee8f-5dba-1d8b71da8246.htm">
-          <HelpTOCNode Title="DoTCPRequest Method (Nullable(SslProtocols), X509Certificate2, String, Int32, String)" Url="html/03059a94-49f9-5a2a-06d2-c71f54297a94.htm" />
-          <HelpTOCNode Title="DoTCPRequest Method (Nullable(SslProtocols), String, String, String, Int32, String)" Url="html/0a472b5e-dd92-66a7-cd5c-60d9e1344fab.htm" />
+      <HelpTOCNode Id="e2791d4c-a29b-4f81-b180-710cf07eb78a" Title="TCPBased Class" Url="html/fb857cb7-bc1f-e2c6-920f-35db79b9646f.htm">
+        <HelpTOCNode Title="TCPBased Constructor " Url="html/bd2422d3-8fc6-5a49-8139-f2eebc6e94e9.htm" />
+        <HelpTOCNode Id="61537ad2-69a8-4fdb-aac9-27f695153efb" Title="TCPBased Properties" Url="html/2b1df6c5-b7b5-ff22-22f2-a17497b3d972.htm">
+          <HelpTOCNode Title="CertificateValidationCallback Property " Url="html/a74fd353-681c-ad03-7120-487d2d5a423d.htm" />
+          <HelpTOCNode Title="ClientCertificate Property " Url="html/02266209-1383-1066-c210-72b6c1ebaa3e.htm" />
+        </HelpTOCNode>
+        <HelpTOCNode Id="9e48ab16-4099-42ff-9f6c-d98d55adaecf" Title="TCPBased Methods" Url="html/18c04b2e-0eae-54d6-cc59-a7847294ef1d.htm">
+          <HelpTOCNode Id="2b1d266c-b404-4f43-86df-5cee17c45056" Title="DoTCPRequest Method " Url="html/82d775c2-0c8e-ee8f-5dba-1d8b71da8246.htm">
+            <HelpTOCNode Title="DoTCPRequest Method (Nullable(SslProtocols), X509Certificate2, String, Int32, String)" Url="html/03059a94-49f9-5a2a-06d2-c71f54297a94.htm" />
+            <HelpTOCNode Title="DoTCPRequest Method (Nullable(SslProtocols), String, String, String, Int32, String)" Url="html/0a472b5e-dd92-66a7-cd5c-60d9e1344fab.htm" />
+          </HelpTOCNode>
         </HelpTOCNode>
       </HelpTOCNode>
     </HelpTOCNode>

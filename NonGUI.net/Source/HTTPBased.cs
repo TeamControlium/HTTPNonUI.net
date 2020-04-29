@@ -5,10 +5,12 @@ namespace TeamControlium.NonGUI
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
     using System.Net.Security;
     using System.Runtime.Remoting;
+    using System.Security.Authentication;
     using System.Security.Cryptography.X509Certificates;
     using TeamControlium.Utilities;
     using static TeamControlium.Utilities.Log;
@@ -18,25 +20,60 @@ namespace TeamControlium.NonGUI
     /// Provides test oriented functionality for interacting with HTTP based protocols
     /// </summary>
     /// <remarks>
+    /// <see cref="HTTPBased"/> uses a number of Repository items for setting of execution aspects.  The items (Category/Item-name) and their default values are listed below.  To change the default, set the item/s as
+    /// required.
+    /// EG.
+    /// <code>Repository.Item[""]</code>
     /// <list type="table">
     /// <listheader>
     /// <term>Category</term><term>Item</term><term>Type</term><term>Default Value</term><term>Comments</term>
     /// </listheader>
     /// <item>
-    /// <term>TeamControlium.HTTP</term><term>SSLPort</term><term>int</term><term>443</term><term>Port used for SSL tunnelled HTTP (HTTPS) communication</term>
+    /// <term>TeamControlium.NonGUI</term><term>TCP_TransactionsLogFile</term>string<term></term><term>null</term><term>If transaction logging required, contains full path &amp; filename for logging of HTTP/TCP transactions.</term>
     /// </item>
     /// <item>
-    /// <term>TeamControlium.HTTP</term><term>HTTPPort</term><term>int</term><term>80</term><term>Port used for unsecure HTTP communication</term>
+    /// <term>TeamControlium.NonGUI</term><term>SSLProtocol</term><term>SslProtocols</term><term>SslProtocols.Tls13 | SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls</term><term>SSL Protocol to be used.  We default to allowing any TLS</term>
+    /// </item>
+    /// <item>
+    /// <term>TeamControlium.NonGUI</term><term>SSLPort</term><term>int</term><term>443</term><term>Port used for SSL tunnelled HTTP (HTTPS) communication</term>
+    /// </item>
+    /// <item>
+    /// <term>TeamControlium.NonGUI</term><term>HTTPPort</term><term>int</term><term>80</term><term>Port used for unsecure HTTP communication</term>
+    /// </item>
+    /// <item>
+    /// <term>TeamControlium.NonGUI</term><term>HTTPHeader_PostText</term><term>string</term><term>POST</term><term></term>
+    /// </item>
+    /// <item>
+    /// <term>TeamControlium.NonGUI</term><term></term><term>string</term><term></term><term></term>
+    /// </item>
+    /// <item>
+    /// <term>TeamControlium.NonGUI</term><term></term><term>string</term><term></term><term></term>
+    /// </item>
+    /// <item>
+    /// <term>TeamControlium.NonGUI</term><term></term><term>string</term><term></term><term></term>
+    /// </item>
+    /// <item>
+    /// <term>TeamControlium.NonGUI</term><term></term><term>string</term><term></term><term></term>
+    /// </item>
+    /// <item>
+    /// <term>TeamControlium.NonGUI</term><term></term><term>string</term><term></term><term></term>
+    /// </item>
+    /// <item>
+    /// <term>TeamControlium.NonGUI</term><term></term><term>string</term><term></term><term></term>
+    /// </item>
+    /// <item>
+    /// <term>TeamControlium.NonGUI</term><term></term><term>string</term><term></term><term></term>
+    /// </item>
+    /// <item>
+    /// <term>TeamControlium.NonGUI</term><term></term><term></term><term></term><term></term>
+    /// </item>
+    /// <item>
+    /// <term>TeamControlium.NonGUI</term><term></term><term></term><term></term><term></term>
     /// </item>
     /// </list>
     /// </remarks>
     public class HTTPBased
     {
-        /// <summary>
-        /// If transaction logging required, contains full path &amp; filename for logging of HTTP/TCP transactions.
-        /// </summary>
-        private string transactionsLogFile = GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "TCP_TransactionsLogFile", null);
-
         /// <summary>
         /// TCP object representing TCB layer of connection for TCP based interactions.
         /// </summary>
@@ -52,10 +89,10 @@ namespace TeamControlium.NonGUI
         /// </summary>
         public HTTPBased()
         {
-            if (!string.IsNullOrEmpty(this.transactionsLogFile))
+            if (!string.IsNullOrEmpty(this.TransactionsLogFile))
             {
-                General.WriteTextToFile(this.transactionsLogFile, General.WriteMode.Append, $"NonGUI Instantiated at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}");
-                LogWriteLine(LogLevels.FrameworkInformation, $"Writing NonGUI transactions to LogFile > {this.transactionsLogFile}");
+                General.WriteTextToFile(this.TransactionsLogFile, General.WriteMode.Append, $"NonGUI Instantiated at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}");
+                LogWriteLine(LogLevels.FrameworkInformation, $"Writing NonGUI transactions to LogFile > {this.TransactionsLogFile}");
             }
 
             this.UseSSL = false;
@@ -63,7 +100,6 @@ namespace TeamControlium.NonGUI
             this.httpRequest = new FullHTTPRequest();
             this.tcpRequest = new TCPBased();
             this.tcpRequest.ClientCertificate = this.ClientCertificate;
-            this.tcpRequest.CertificateValidationCallback = this.CertificateValidationCallback;
         }
 
         /// <summary>
@@ -127,6 +163,26 @@ namespace TeamControlium.NonGUI
         }
 
         /// <summary>
+        /// If transaction logging required, contains full path &amp; filename for logging of HTTP/TCP transactions.
+        /// </summary>
+        public string TransactionsLogFile => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "TCP_TransactionsLogFile", null);
+
+        /// <summary>
+        /// SSL Protocol to use.  We default to allowing any TLS
+        /// </summary>
+        public SslProtocols SSLProtocol => GetItemLocalOrDefault<SslProtocols>("TeamControlium.NonGUI", "SSLProtocol", SslProtocols.Tls13 | SslProtocols.Tls12 | SslProtocols.Tls11 | SslProtocols.Tls);
+
+        /// <summary>
+        /// TCP Port used for SSL (https://) based communications.  Is usually port 443.
+        /// </summary>
+        public int SSLPort => GetItemLocalOrDefault<int>("TeamControlium.NonGUI", "SSLPort", 443);
+
+        /// <summary>
+        /// TCP Port used for unsecure HTTP (http://) based communications.  Is usually port 80.
+        /// </summary>
+        public int HTTPPort => GetItemLocalOrDefault<int>("TeamControlium.NonGUI", "HTTPPort", 80);
+
+        /// <summary>
         /// Gets last exception thrown in a Try... method.
         /// </summary>
         public Exception TryException { get; private set; } = null;
@@ -139,7 +195,33 @@ namespace TeamControlium.NonGUI
         /// <summary>
         /// Gets or sets Call-back delegate for custom/test-based validations of Server certificates.  Can be used for Server Certificate logging, negative testing etc...
         /// </summary>
-        public RemoteCertificateValidationCallback CertificateValidationCallback { get; set; } = null;
+        public RemoteCertificateValidationCallback CertificateValidationCallback
+        {
+            get
+            {
+                return this.tcpRequest?.CertificateValidationCallback ?? null;
+            }
+
+            set
+            {
+                this.tcpRequest.CertificateValidationCallback = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets full URL used in last HTTP Request
+        /// </summary>
+        public string ActualURL { get; private set; } = null;
+
+        /// <summary>
+        /// Gets payload (HTTP Header and body) used in last HTTP Request
+        /// </summary>
+        public string ActualPayload { get; private set; } = null;
+
+        /// <summary>
+        /// Gets raw HTTP Response string from last HTTP Request 
+        /// </summary>
+        public string ActualRawResponse { get; private set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets a value indicating whether a secure SSL (HTTPS) connection is to be used
@@ -147,13 +229,34 @@ namespace TeamControlium.NonGUI
         public bool UseSSL { get; set; }
 
         /// <summary>
+        /// Sets signed (if required) X509Certificate to be used in an HTTPS Request if required.
+        /// </summary>
+        /// <remarks>
+        /// If Certificate requires signing (IE. With a Password), it is the responsibility of caller to do this Prior to usage. <see cref="CertificatePassword"/> is ONLY
+        /// used for signing <see cref="CertificateFilename"/>.<br/>
+        /// If both <see cref="Certificate"/> and <see cref="CertificateFilename"/> are defined, <see cref="Certificate"/> is used.</remarks>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1623:PropertySummaryDocumentationMustMatchAccessors", Justification = "Get is private and not documented")] 
+        public X509Certificate2 Certificate { private get; set; } = null;
+
+        /// <summary>
+        /// Sets full path and Filename of X509 Certificate to be used in an HTTPS Request if required.
+        /// </summary>
+        /// <remarks>If both <see cref="Certificate"/> and <see cref="CertificateFilename"/> are defined, <see cref="Certificate"/> is used.</remarks>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1623:PropertySummaryDocumentationMustMatchAccessors", Justification = "Get is private and not documented")]
+        public string CertificateFilename { private get; set; } = null;
+
+        /// <summary>
+        /// Sets password to be used with defined <see cref="CertificateFilename"/> if required.
+        /// </summary>
+        /// <remarks>If <see cref="Certificate"/> is defined (which takes precedence over <see cref="CertificateFilename"/>) <see cref="CertificateFilename"/> is
+        /// NOT used - it is callers responsibility to sign <see cref="Certificate"/> if being used.</remarks>
+        [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1623:PropertySummaryDocumentationMustMatchAccessors", Justification = "Get is private and not documented")]
+        public string CertificatePassword { private get; set; } = null;
+
+        /// <summary>
         /// Gets or sets the HTTP Domain
         /// </summary>
-        public string Domain
-        {
-            get;
-            set;
-        }
+        public string Domain { get; set; }
 
         /// <summary>
         /// Gets or sets the HTTP Method
@@ -241,16 +344,6 @@ namespace TeamControlium.NonGUI
         public string ResponseRaw { get; private set; }
 
         /// <summary>
-        /// TCP Port used for SSL (https://) based communications.  Is usually port 443.
-        /// </summary>
-        private int SSLPort => GetItemLocalOrDefault<int>("TeamControlium.HTTP", "SSLPort", 443);
-
-        /// <summary>
-        /// TCP Port used for unsecure HTTP (http://) based communications.  Is usually port 80.
-        /// </summary>
-        private int HTTPPort => GetItemLocalOrDefault<int>("TeamControlium.HTTP", "HTTPPort", 80);
-
-        /// <summary>
         /// Performs an HTTP GET to the required Domain/ResourcePath containing given HTTP Query-string Header and Body (if given)
         /// </summary>
         /// <param name="domain">Domain to POST to.  IE. postman-echo.com</param>
@@ -302,77 +395,6 @@ namespace TeamControlium.NonGUI
         public ItemList HttpGET(string domain, string resourcePath, string query, string header, string body = null)
         {
             return this.Http(HTTPMethods.Get, domain, resourcePath, query, header, body);
-        }
-
-        /// <summary>
-        /// Performs an HTTP GET to the required Domain/ResourcePath containing given HTTP Query-string Header and Body (if given)
-        /// </summary>
-        /// <returns>Processed HTTP Response</returns>
-        /// <remarks>
-        /// <list type="table">
-        /// GET Parameters are obtained from properties.  Examples are based on an HTTP Post to http://postman-echo.com/get?foo1=bar1&amp;foo2=bar2
-        /// <listheader>
-        /// <term>Property</term><term>Example</term><term>Comments</term>
-        /// </listheader>
-        /// <item>
-        /// <term><see cref="Domain"/></term><term>postman-echo.com</term><term>Domain to request GET to</term>
-        /// </item>
-        /// <item>
-        /// <term><see cref="ResourcePath"/></term><term>/get</term><term>Resource Path</term>
-        /// </item>
-        /// <item>
-        /// <term><see cref="QueryString"/></term><term>foo1=bar1&amp;foo2=bar2</term><term>Query String</term>
-        /// </item>
-        /// <item>
-        /// <term><see cref="HeaderString"/></term><term>Accept: */*\r\nHost: postman-echo.com\r\nAccept-Encoding: identity\r\nConnection: close\r\n</term><term>Header items String</term>
-        /// </item>
-        /// <item>
-        /// <term><see cref="Body"/></term><term>null (Not even set, NonGUI will default to null)</term><term>Body String</term>
-        /// </item>
-        /// </list>
-        /// Notes.<br/>
-        /// Content-Length header item is automatically added (or, if exists in given header, modified) during building of Request.
-        /// If Connection keep-alive is used, currently request will time-out on waiting for response.  Intelligent and async functionality needs building in.
-        /// Aspects of request (such as port, header/request layout etc.) can be modified using settings stored in Repository.  See <see cref="HTTPBased"/>
-        /// and documentation for details of Repository items referenced.
-        /// <br/>
-        /// Processed HTTP Response is passed back as a collection of Name/Value pairs.  The following raw HTTP response is converted;
-        /// <code>
-        /// HTTP/1.1 200 OK<br/>
-        /// Cache-Control: private, max-age=0<br/>
-        /// Content-Length: 240<br/>
-        /// Content-Type: application/json; charset=utf-8<br/>
-        /// Server: nginx<br/>
-        /// ETag: W/"f0-EYtfNu+sVmscSzVVghi5p8EfJsA"<br/>
-        /// Vary: Accept-Encoding<br/>
-        /// Access-Control-Allow-Methods: GET, POST<br/>
-        /// Access-Control-Allow-Headers: content-type<br/>
-        /// Access-Control-Allow-Credentials: true<br/>
-        /// Strict-Transport-Security: max-age=31536000<br/>
-        /// Date: Thu, 16 Apr 2020 01:08:29 GMT<br/>
-        /// Connection: close<br/>
-        /// <br/>
-        /// {<br/>
-        ///   "args":{<br/>
-        ///     "foo1":"bar1",<br/>
-        ///     "foo2":"bar2"<br/>
-        ///   },<br/>
-        ///   "headers":{<br/>
-        ///     "x-forwarded-proto":"https",<br/>
-        ///     "host":"postman-echo.com",<br/>
-        ///     "accept-encoding":"identity",<br/>
-        ///     "content-type":"text/xml",<br/>
-        ///     "x-forwarded-port":"80"<br/>
-        ///   },<br/>
-        ///   "url":"https://postman-echo.com/get?foo1=bar1&amp;foo2=bar2"<br/>
-        /// }
-        /// </code>
-        /// Most items are self-explanatory - See <see cref="HttpPOST(string, string, string, string, string)"/> for details.
-        /// Note.  HTTP Content-Length header item in request will automatically be added (or updated if already in <see cref="HeaderList"/>)
-        /// </remarks>
-        public ItemList HttpGET()
-        {
-            return this.Http(HTTPMethods.Get);
         }
 
         /// <summary>
@@ -575,7 +597,7 @@ namespace TeamControlium.NonGUI
             try
             {
                 FullHTTPRequest httpPayload = new FullHTTPRequest(HTTPMethods.Post, resourcePath, (string)null, header, body);
-                response = this.DecodeResponse(this.tcpRequest.DoTCPRequest(null, null, domain, this.HTTPPort, httpPayload.ToString(true)));
+                response = this.DecodeResponse(this.DoHTTPRequest(domain, this.UseSSL ? this.SSLPort : this.HTTPPort, httpPayload, true));
                 return true;
             }
             catch (Exception ex)
@@ -587,153 +609,29 @@ namespace TeamControlium.NonGUI
         }
 
         /// <summary>
-        /// Performs an HTTP POST to the required Domain/ResourcePath containing given HTTP Header and Body
-        /// </summary>
-        /// <returns>Processed HTTP Response</returns>
-        /// <remarks>
-        /// <list type="table">
-        /// POST Parameters are obtained from properties.  Examples are based on an HTTP Post to http://www.mypostexample.com/path/to/resource.wso?para1=data1#param1=data2
-        /// <listheader>
-        /// <term>Property</term><term>Example</term><term>Comments</term>
-        /// </listheader>
-        /// <item>
-        /// <term><see cref="Domain"/></term><term>www.mypostexample.com</term><term>Domain to Post to</term>
-        /// </item>
-        /// <item>
-        /// <term><see cref="ResourcePath"/></term><term>/path/to/resource.wso</term><term>Resource Path</term>
-        /// </item>
-        /// <item>
-        /// <term><see cref="QueryString"/></term><term>para1=data1&amp;param1=data2</term><term>Query String</term>
-        /// </item>
-        /// <item>
-        /// <term><see cref="HeaderString"/></term><term>Accept: */*\r\nHost: www.mypostexample.com\r\nAccept-Encoding: identity\r\nConnection: close\r\n</term><term>Header items String</term>
-        /// </item>
-        /// <item>
-        /// <term><see cref="Body"/></term><term>&lt;?xml version=\"1.0\"?&gt;&lt;s11:Env...oWords&gt;&lt;/s11:Body&gt;&lt;/s11:Envelope&gt;";</term><term>Body String</term>
-        /// </item>
-        /// </list>
-        /// Notes.<br/>
-        /// <see cref="QueryList"/> can be used for <see cref="QueryString"/>.  In which case query parameters can be loaded as Name/Value pairs.
-        /// <see cref="HeaderList"/> can be used for <see cref="HeaderString"/>.  In which case Header items parameters can be loaded as Name/Value pairs.  When this is done, <see cref="ResourcePath"/> must be loaded if valid Request is to be sent.
-        /// Content-Length header item is automatically added (or, if exists in given header, modified) during building of Request.
-        /// If Connection keep-alive is used, currently request will time-out on waiting for response.  Intelligent and async functionality needs building in.
-        /// Aspects of request (such as port, header/request layout etc.) can be modified using settings stored in Repository.  See <see cref="HTTPBased"/>
-        /// and documentation for details of Repository items referenced.
-        /// <list type="table">
-        /// Processed HTTP Response is passed back as a collection of Name/Value pairs.  The following raw HTTP response is converted;
-        /// <code>
-        /// HTTP/1.1 200 OK<br/>
-        /// Cache-Control: private, max-age=0<br/>
-        /// Content-Length: 346<br/>
-        /// Content-Type: text/xml; charset=utf-8<br/>
-        /// Server: Server<br/>
-        /// Web-Service: DataFlex 18.1<br/>
-        /// Access-Control-Allow-Origin: http://www.dataaccess.com<br/>
-        /// Access-Control-Allow-Methods: GET, POST<br/>
-        /// Access-Control-Allow-Headers: content-type<br/>
-        /// Access-Control-Allow-Credentials: true<br/>
-        /// Strict-Transport-Security: max-age=31536000<br/>
-        /// Date: Tue, 07 Apr 2020 22:16:05 GMT<br/>
-        /// Connection: close<br/>
-        /// <br/>
-        /// &lt;?xml version="1.0" encoding="utf-8"?&gt;<br/>
-        /// &lt;soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"&gt;<br/>
-        ///   &lt;soap:Body&gt;<br/>
-        ///     &lt;m:NumberToWordsResponse xmlns:m="http://www.dataaccess.com/webservicesserver/"&gt;<br/>
-        ///       &lt;m:NumberToWordsResult&gt;seventy eight &lt;/m:NumberToWordsResult&gt;<br/>
-        ///     &lt;/m:NumberToWordsResponse&gt;<br/>
-        ///   &lt;/soap:Body&gt;<br/>
-        /// &lt;/soap:Envelope&gt;
-        /// </code>
-        /// Most items are self-explanatory;
-        /// <listheader>
-        /// <term>Item Name</term><term>Example</term><term>Comments</term>
-        /// </listheader>
-        /// <item>
-        /// <term>HTTPVersion</term><term>1.1</term><term>HTTP Version - Always in Processed response</term>
-        /// </item>
-        /// <item>
-        /// <term>StatusCode</term><term>200</term><term>Status code - Always in Processed response</term>
-        /// </item>
-        /// <item>
-        /// <term>StatusText</term><term>OK</term><term>Status text - Always in Processed response</term>
-        /// </item>
-        /// <item>
-        /// <term>Cache-Control</term><term>private; max-age=0</term><term>Dependant on server and application</term>
-        /// </item>
-        /// <item>
-        /// <term>Content-Length</term><term>346</term><term>Number of characters in Body - Always in Processed response</term>
-        /// </item>
-        /// <item>
-        /// <term>Content-Type</term><term>text/xml; charset=utf-8</term><term>Type of body data - Always in Processed response</term>
-        /// </item>
-        /// <item>
-        /// <term>Server</term><term>Server</term><term>Dependant on server and application</term>
-        /// </item>
-        /// <item>
-        /// <term>Web-Service</term><term>DataFlex 18.1</term><term>Dependant on server and application</term>
-        /// </item>
-        /// <item>
-        /// <term>Access-Control-Allow-Origin</term><term>http</term><term></term>
-        /// </item>
-        /// <item>
-        /// <term>Access-Control-Allow-Methods</term><term>GET</term><term>POST</term><term></term>
-        /// </item>
-        /// <item>
-        /// <term>Access-Control-Allow-Headers</term><term>content-type</term><term></term>
-        /// </item>
-        /// <item>
-        /// <term>Access-Control-Allow-Credentials</term><term>true</term><term></term>
-        /// </item>
-        /// <item>
-        /// <term>Strict-Transport-Security</term><term>max-age=31536000</term><term></term>
-        /// </item>
-        /// <item>
-        /// <term>Date</term><term>Tue, 07 Apr 2020 22</term><term>Server date</term>
-        /// </item>
-        /// <item>
-        /// <term>Connection</term><term>close</term><term>Indicates what state the Server will hold connection at end of response - Always in Processed response</term>
-        /// </item>
-        /// <item>
-        /// <term>Body</term><term>&lt;http&gt;&lt;body&gt;hello&lt;/body&gt;&lt;/http&gt;</term><term>Raw body of HTTP Response</term>
-        /// </item>
-        /// </list>
-        /// Note.  HTTP Content-Length header item in request will automatically be added (or updated if already in <see cref="HeaderList"/>)
-        /// </remarks>
-        public ItemList HttpPOST()
-        {
-            return this.Http(HTTPMethods.Post);
-        }
-
-        /// <summary>
         /// Sends an HTTP Request with the given request method and set properties then returns response.
         /// </summary>
-        /// <param name="method">Required method.  See <see cref="HTTPMethods"/></param>
         /// <param name="setContentLength">Optional parameter (default true) - Indicates if HTTP Content-Length header item should automatically be added/updated or not</param>
         /// <returns>Response returned from request</returns>
         /// <remarks>
         /// If there is a timeout an Exception will be logged and thrown.<br/>
         /// If the header Connection: keep-alive is used this WILL currently result in a timeout.<br/>
-        /// The Header item 'Content-Length' will automatically be added (or updated with actual Body length if set already)
         /// </remarks>
-        public ItemList Http(HTTPMethods method, bool setContentLength = true)
+        public ItemList Http(bool setContentLength = true)
         {
+            string responseString = string.Empty;
+
             if (string.IsNullOrWhiteSpace(this.Domain))
             {
-                throw new Exception($" HTTP {method}: Invalid Domain.  Expect xxx.xxx.xxx etc..  Have [{this.Domain}]");
+                throw new Exception($" HTTP {this.httpRequest.HTTPMethod}: Invalid Domain.  Expect xxx.xxx.xxx etc..  Have [{this.Domain}]");
             }
 
-            this.HTTPMethod = method;
-
-            string payLoad = this.httpRequest.ToString(setContentLength);
-
-            return this.DecodeResponse(this.tcpRequest.DoTCPRequest(null, null, this.Domain, this.HTTPPort, payLoad));
+            return this.DecodeResponse(this.DoHTTPRequest(this.Domain, this.UseSSL ? this.SSLPort : this.HTTPPort, this.httpRequest, setContentLength));
         }
 
         /// <summary>
-        /// Sends an HTTP Request with the given request method and set properties then returns response.
+        /// Sends an HTTP Request with the and set properties then returns response.
         /// </summary>
-        /// <param name="method">Required method.  See <see cref="HTTPMethods"/></param>
         /// <param name="response">If successful, Response returned from request otherwise null. </param>
         /// <param name="setContentLength">Optional parameter (default true) - Indicates if HTTP Content-Length header item should automatically be added/updated or not</param>
         /// <returns>True if successful, otherwise false.  If false, <see cref="TryException"/> contains exception thrown</returns>
@@ -742,11 +640,11 @@ namespace TeamControlium.NonGUI
         /// If the header Connection: keep-alive is used this WILL currently result in a timeout.<br/>
         /// The Header item 'Content-Length' will automatically be added (or updated with actual Body length if set already)
         /// </remarks>
-        public bool TryHttp(HTTPMethods method, out ItemList response, bool setContentLength = true)
+        public bool TryHttp(out ItemList response, bool setContentLength = true)
         {
             try
             {
-                response = this.Http(method, setContentLength);
+                response = this.Http(setContentLength);
                 return true;
             }
             catch (Exception ex)
@@ -776,7 +674,7 @@ namespace TeamControlium.NonGUI
         public ItemList Http(HTTPMethods method, string domain, string resourcePath, string query, string header, string body, bool setContentLength = true)
         {
             FullHTTPRequest httpPayload = new FullHTTPRequest(method, resourcePath, query, header, body);
-            return this.DecodeResponse(this.tcpRequest.DoTCPRequest(null, null, domain, this.HTTPPort, httpPayload.ToString(setContentLength)));
+            return this.DecodeResponse(this.DoHTTPRequest(domain, this.UseSSL ? this.SSLPort : this.HTTPPort, httpPayload, setContentLength));
         }
 
         /// <summary>
@@ -839,8 +737,6 @@ namespace TeamControlium.NonGUI
         /// </item>
         /// </list>
         /// Notes.<br/>
-        /// <see cref="QueryList"/> can be used for <see cref="QueryString"/>.  In which case query parameters can be loaded as Name/Value pairs.
-        /// <see cref="HeaderList"/> can be used for <see cref="HeaderString"/>.  In which case Header items parameters can be loaded as Name/Value pairs.  When this is done, <see cref="ResourcePath"/> must be loaded if valid Request is to be sent.
         /// Content-Length header item is automatically added (or, if exists in given header, modified) during building of Request.
         /// If Connection keep-alive is used, currently request will time-out on waiting for response.  Intelligent and async functionality needs building in.
         /// Aspects of request (such as port, header/request layout etc.) can be modified using settings stored in Repository.  See <see cref="HTTPBased"/>
@@ -924,7 +820,7 @@ namespace TeamControlium.NonGUI
         /// <term>Body</term><term>&lt;http&gt;&lt;body&gt;hello&lt;/body&gt;&lt;/http&gt;</term><term>Raw body of HTTP Response</term>
         /// </item>
         /// </list>
-        /// Note.  HTTP Content-Length header item in request will automatically be added (or updated if already in <see cref="HeaderList"/>)
+        /// Note.  HTTP Content-Length header item in request will automatically be added
         /// </remarks>
         public bool TryHttpPOST(out ItemList response)
         {
@@ -936,10 +832,7 @@ namespace TeamControlium.NonGUI
                 }
 
                 this.HTTPMethod = HTTPMethods.Post;
-
-                string payLoad = this.httpRequest.ToString(true);
-
-                response = this.DecodeResponse(this.tcpRequest.DoTCPRequest(null, null, this.Domain, this.HTTPPort, payLoad));
+                response = this.DecodeResponse(this.DoHTTPRequest(this.Domain, this.UseSSL ? this.SSLPort : this.HTTPPort, this.httpRequest, true));
                 return true;
             }
             catch (Exception ex)
@@ -970,6 +863,44 @@ namespace TeamControlium.NonGUI
         public void SetHeaderStringFromItemList(ItemList list)
         {
             this.httpRequest.SetHeader(list);
+        }
+
+        /// <summary>
+        /// Perform as an HTTP Request, using given parameters
+        /// </summary>
+        /// <param name="domain">Domain name of host.  IE. <![CDATA[testdomain.com]]></param>
+        /// <param name="port">TCP Port to be used.  Usually 80 for http or 443 for https</param>
+        /// <param name="httpRequest">Details of HTTP Request.  <see cref="FullHTTPRequest"/></param>
+        /// <param name="addContentLength">If true, Content-Length header item is added (or updated if already present) with actual byte length of HTTP body.</param>
+        /// <returns>Raw string containing HTTP Response</returns>
+        private string DoHTTPRequest(string domain, int port, FullHTTPRequest httpRequest, bool addContentLength)
+        {
+            string httpRequestString = httpRequest.ToString(addContentLength);
+            string responseString = string.Empty;
+
+            this.ActualURL = domain + ":" + port.ToString();
+            this.ActualPayload = httpRequestString;
+
+            if (this.UseSSL == true)
+            {
+                this.ActualURL = "https://" + this.ActualURL;
+                if (this.Certificate == null && this.CertificateFilename != null)
+                {
+                    responseString = this.tcpRequest.DoTCPRequest(this.SSLProtocol, this.CertificateFilename, this.CertificatePassword ?? string.Empty, domain, port, httpRequestString);
+                }
+                else
+                {
+                    responseString = this.tcpRequest.DoTCPRequest(this.SSLProtocol, this.Certificate, domain, port, httpRequestString);
+                }
+            }
+            else
+            {
+                this.ActualURL = "http://" + this.ActualURL;
+                responseString = this.tcpRequest.DoTCPRequest(null, null, domain, port, httpRequestString);
+            }
+
+            this.ActualRawResponse = responseString;
+            return responseString;
         }
 
         /// <summary>
@@ -1212,7 +1143,7 @@ namespace TeamControlium.NonGUI
                 this.SetQueryParameters((string)null);
                 this.Body = string.Empty;
             }
-            
+
             /// <summary>
             /// Initialises a new instance of the <see cref="FullHTTPRequest" /> class.  Creates HTTP Request data containing given header and body.
             /// </summary>
@@ -1318,31 +1249,14 @@ namespace TeamControlium.NonGUI
             }
 
             /// <summary>
-            /// Gets or sets HTTP Request body
+            /// First Text in an HTTP request to denote an HTTP POST Method.  Should be POST
             /// </summary>
-            public string Body
-            {
-                get;
-                set;
-            }
+            public string HttpTypePostText => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPHeader_PostText", "POST");
 
             /// <summary>
-            /// Gets or sets HTTP Request body
+            /// First Text in an HTTP request to denote an HTTP GET Method.  Should be GET
             /// </summary>
-            public string ResourcePath
-            {
-                get;
-                set;
-            }
-
-            /// <summary>
-            /// Gets or sets the HTTP Method to be used in header when building a request.  May be null in which case it is ignored.  This may be the case when the user has explicitly put the HPP Method in the request string.
-            /// </summary>
-            public HTTPMethods? HTTPMethod
-            {
-                get;
-                set;
-            }
+            public string HttpTypeGetText => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPHeader_PostText", "GET");
 
             /// <summary>
             /// Separator between URL Resource Path and Query string.  Should be ?
@@ -1358,16 +1272,6 @@ namespace TeamControlium.NonGUI
             /// Separator between name and value of each query parameter.  Should be =
             /// </summary>
             public string HttpURLQueryParameterNameValueSeparator => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPURL_ParameterNameValueSeparator", "=");
-
-            /// <summary>
-            /// First Text in an HTTP request to denote an HTTP POST Method.  Should be POST
-            /// </summary>
-            public string HttpTypePostText => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPHeader_PostText", "POST");
-
-            /// <summary>
-            /// First Text in an HTTP request to denote an HTTP GET Method.  Should be GET
-            /// </summary>
-            public string HttpTypeGetText => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HTTPHeader_PostText", "GET");
 
             /// <summary>
             /// Text in HTTP request top line to indicate HTTP version document is compliant with.  Should be HTTP/1.1
@@ -1398,6 +1302,33 @@ namespace TeamControlium.NonGUI
             /// Delimiter between HTTP Request header items and the body.  Specification states this must be a CRLF with no preceding characters  
             /// </summary>
             public string HeaderBodyDelimiter => GetItemLocalOrDefault<string>("TeamControlium.NonGUI", "HeaderBodyDelimiter", "\r\n");
+
+            /// <summary>
+            /// Gets or sets HTTP Request body
+            /// </summary>
+            public string Body
+            {
+                get;
+                set;
+            }
+
+            /// <summary>
+            /// Gets or sets HTTP Request body
+            /// </summary>
+            public string ResourcePath
+            {
+                get;
+                set;
+            }
+
+            /// <summary>
+            /// Gets or sets the HTTP Method to be used in header when building a request.  May be null in which case it is ignored.  This may be the case when the user has explicitly put the HPP Method in the request string.
+            /// </summary>
+            public HTTPMethods? HTTPMethod
+            {
+                get;
+                set;
+            }
 
             /// <summary>
             /// Gets Header from Repository data. If null Header is passed in to a call (or a public Web method with no option to set a Header is used), this property is used.  Property is populated from
@@ -1729,7 +1660,7 @@ namespace TeamControlium.NonGUI
             }
 
             /// <summary>
-            /// Builds HTTP Request Header top line using <see cref="HTTPMethod"/>, <see cref="ResourcePath"/> and <see cref="QueryString"/>/<see cref="QueryList"/>.  Query string
+            /// Builds HTTP Request Header top line using <see cref="HTTPMethod"/>, <see cref="ResourcePath"/> and <see cref="QueryString"/>.  Query string
             /// is delimited from Resource path using <see cref="HttpURLQuerySeparator"/>.
             /// </summary>
             /// <returns>Built top line of required HTTP Request</returns>

@@ -306,10 +306,12 @@ namespace TeamControlium.NonGUI.UnitTests
             switch (httpTransactionType.ToLower())
             {
                 case "post":
-                    this.context["Response"] = http.HttpPOST();
+                    http.HTTPMethod = HTTPBased.HTTPMethods.Post;
+                    this.context["Response"] = http.Http();
                     break;
                 case "get":
-                    this.context["Response"] = http.HttpGET();
+                    http.HTTPMethod = HTTPBased.HTTPMethods.Get;
+                    this.context["Response"] = http.Http();
                     break;
                 default:
                     throw new ArgumentException($"Only supporting POST and GET.  Got [{httpTransactionType}]", "httpTransactionType");

@@ -5,7 +5,7 @@
     <RootNamespace>NonGUI.net</RootNamespace>
     <AssemblyName>TeamControlium.NonGUI</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.3</Version>
+    <Version>2.0.6</Version>
     <Authors>TeamControlium Contributors</Authors>
     <Company>TeamControlium ContributorsTeamControlium Contributors</Company>
     <Product>TeamControlium NonGUI.net</Product>
@@ -17,11 +17,11 @@
     <RepositoryUrl>https://github.com/TeamControlium/NonGUI.net.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>TeamControlium testautomation functional library http tcp webservices rest json</PackageTags>
-    <PackageReleaseNotes>Replaced all occurances of HTTPNonUI to NonGUI.  There were some instances of test data settings which could cause confusion.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixes found during development of Examples.</PackageReleaseNotes>
     <NeutralLanguage>English (Australia)</NeutralLanguage>
     <Copyright>Copyright 2018 - Mat Walker and the Team Controlium contributors</Copyright>
-    <AssemblyVersion>2.0.3.0</AssemblyVersion>
-    <FileVersion>2.0.3.0</FileVersion>
+    <AssemblyVersion>2.0.6.0</AssemblyVersion>
+    <FileVersion>2.0.6.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
